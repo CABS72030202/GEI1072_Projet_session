@@ -4,7 +4,7 @@
 
 int main() {
 
-inputTypeMenu();
+input_type_menu();
 return 0;
 
 } 

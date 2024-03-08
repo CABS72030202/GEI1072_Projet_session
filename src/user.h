@@ -4,15 +4,17 @@
 /* Functions used to interact with the user :
     - Print selection menus
     - Input validation
+    - Boolean expression definition by the user
 */
 
 // Specific functions
-void inputTypeMenu();
-void optionMenu();
+void input_type_menu();
+void option_menu();
+int** define_truth_table(int);
+char* define_bool_exp(int);
 
 // General functions
-int menuSelection(char* choices[], int size);
-int validInput(int maxVal);
-void exitError();
+int menu_selection(char*[], int);
+int valid_input(int);
 
 #endif
