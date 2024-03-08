@@ -10,11 +10,11 @@
 // Specific functions
 void input_type_menu();
 void option_menu();
-int** define_truth_table(int);
-char* define_bool_exp(int);
+void input_truth_table(int);
+void input_bool_exp(int);
 
 // General functions
 int menu_selection(char*[], int);
-int valid_input(int);
+int valid_input(int, int);
 
 #endif
