@@ -1,6 +1,7 @@
-#include<stdio.h>
-#include "../src/tools.h"
+#include "../src/user.h"
+#include <stdio.h>
 
+// Specific functions
 void inputTypeMenu() {
     printf("\n--- Veuillez choisir un type de saisie parmi les suivants ---\n");
     char* choices[] = {"Table de vérité", "Expression booléenne"};
@@ -24,6 +25,7 @@ void optionMenu() {
     menuSelection(choices, 1);
 }
 
+// General functions
 int menuSelection(char* choices[], int size) {
     int i, userInput;
     for (i = 0; i < size; ++i)
