@@ -21,14 +21,25 @@ void input_type_menu() {
         break;
 
         default:
-        exitError("inputTypeMenu() user.c");
+        exitError("inputTypeMenu user.c");
     }
 }
 
 void option_menu() {
     printf("\n--- Veuillez choisir une option parmi les suivantes ---\n");
-    char* choices[] = {"Déterminer une expression simplifiée équivalente"};
-    menu_selection(choices, 1);
+    char* choices[] = {"Afficher la table de vérité", "Déterminer une expression simplifiée équivalente"};
+    int input = menu_selection(choices, 2);
+    switch (input) {
+        case 1:
+        print_truth_table(current_eq.var_count, current_eq.truth_table);
+        break;
+
+        case 2:
+        break;
+    
+        default:
+        exitError("optionMenu user.c");
+    }
 }
 
 void input_truth_table(int var_count) {
@@ -44,6 +55,7 @@ void input_truth_table(int var_count) {
             else
                 truth_table[i][j] = (i >> (var_count - 1 - j)) & 1;
     }
+    initialize_from_TT(var_count, truth_table);
 }
 
 void input_bool_exp(int var_count) {

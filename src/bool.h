@@ -11,8 +11,8 @@ typedef struct {
     char* bool_exp;
 } Equation;
 
-// Static variable
-static Equation current_eq;
+// Global variable
+extern Equation current_eq;
 
 // Functions
 void initialize_from_TT(int, int**);

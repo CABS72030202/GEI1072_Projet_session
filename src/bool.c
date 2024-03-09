@@ -2,6 +2,8 @@
 #include "../src/public.h"
 #include <stdio.h>
 
+Equation current_eq;
+
 void initialize_from_TT(int var_count, int** truth_table) {
     current_eq.var_count = var_count;
     current_eq.truth_table = truth_table;
@@ -15,11 +17,14 @@ void initialize_from_BE(int var_count, char* bool_exp) {
 }
 
 char* convert_TT_to_BE(int var_count, int** truth_table) {
-
+    char* temp = "test";
+    return temp;
 }
 
 int** convert_BE_to_TT(int var_count, char* bool_exp) {
-
+    int temp = 34;
+    int p_temp = &temp;
+    return &p_temp;
 }
 
 void print_truth_table(int var_count, int** truth_table) {
