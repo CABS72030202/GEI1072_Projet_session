@@ -9,7 +9,7 @@
 
 // Specific functions
 void input_type_menu();                 // Menu letting the user choose how the boolean equation will be initialized
-void option_menu();                     // Menu letting the user choose what to do with the initialized boolean equation
+void option_menu();                     // Menu letting the user choose what to do next (main program loop)
 void input_truth_table(int);            // Menu letting the user define the boolean equation with a truth table
 void input_bool_exp(int);               // Menu letting the user define the boolean equation with an expression
 

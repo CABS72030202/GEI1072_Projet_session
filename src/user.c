@@ -15,11 +15,9 @@ void input_type_menu() {
         case 1:     // Truth table
         input_truth_table(var_count);
         break;
-
         case 2:     // Boolean expression
         input_bool_exp(var_count);
         break;
-
         default:
         exitError("inputTypeMenu user.c");
     }
@@ -27,19 +25,36 @@ void input_type_menu() {
 
 void option_menu() {
     printf("\n--- Veuillez choisir une option parmi les suivantes ---\n");
-    char* choices[] = {"Afficher la table de vérité", "Déterminer une expression simplifiée équivalente"};
-    int input = menu_selection(choices, 2);
+    char* choices[] = {
+            "Afficher la table de vérité", 
+            "Afficher l'expression actuelle", 
+            "Déterminer une équation simplifiée équivalente", 
+            "Sauvegarder l'équation dans un fichier texte", 
+            "Saisir une nouvelle équation booléenne", 
+            "Quitter le programme"};
+    int input = menu_selection(choices, 6);
     switch (input) {
-        case 1:
+        case 1:     // Print truth table
         print_truth_table(current_eq.var_count, current_eq.truth_table);
         break;
-
-        case 2:
+        case 2:     // Print boolean expression
+        print_bool_exp(current_eq.bool_exp);
         break;
-    
+        case 3:     // Simplify boolean equation
+        break;
+        case 4:     // Save boolean equation in a text file
+        break;
+        case 5:     // Define new boolean equation
+        input_type_menu();
+        break;
+        case 6:     // Close program
+        printf("\nGoodbye!\n");
+        exit(0);
+        break;
         default:
         exitError("optionMenu user.c");
     }
+    option_menu();
 }
 
 void input_truth_table(int var_count) {
