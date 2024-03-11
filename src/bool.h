@@ -1,27 +1,27 @@
 #ifndef BOOL_H
 #define BOOL_H
 
-/*  Functions used to define all forms 
-    of a boolean expression  
+/*  Functions used to define and manipulate
+     all forms of a boolean expression  
 */
 
 typedef struct {
-    int var_count;
-    int** truth_table;
-    char* bool_exp;
+    int var_count;                      // Number of variables in the boolean equation
+    int** truth_table;                  // 2D int array defining the truth table of the boolean equation
+    char* bool_exp;                     // String defining the boolean expression
 } Equation;
 
 // Global variable
-extern Equation current_eq;
+extern Equation current_eq;             // Global variable that stocks the current boolean equation
 
 // Functions
-void initialize_from_TT(int, int**);
-void initialize_from_BE(int, char*);
-char* convert_TT_to_BE(int, int**);
-int** convert_BE_to_TT(int, char*);
-void print_truth_table(int, int**);
-void print_truth_line(int, int, int**);
-void print_truth_header(int);
-void print_bool_exp(char*);
+void initialize_from_TT(int, int**);    // Initialize every attributes of the global variable "current_eq" knowing the truth table
+void initialize_from_BE(int, char*);    // Initialize every attributes of the global variable "current_eq" knowing the boolean expression
+char* convert_TT_to_BE(int, int**);     // Define the boolean expression of an equation with the associated truth table
+int** convert_BE_to_TT(int, char*);     // Define the truth table of an equation with the associated boolean expression
+void print_truth_table(int, int**);     // Print a truth table with its header
+void print_truth_line(int, int, int**); // Print a specific line of a truth table
+void print_truth_header(int);           // Print the header of a truth table
+void print_bool_exp(char*);             // Print a boolean expression
 
 #endif
