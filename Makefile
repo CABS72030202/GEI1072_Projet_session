@@ -9,8 +9,8 @@ main: main.o public.o bool.o user.o karnaugh.o
 	$(CC) $(CFLAGS) -o main main.o public.o bool.o user.o karnaugh.o $(LIB)
 
 # Test unit executable construction
-test_unit: test_unit.o karnaugh.o
-	$(CC) $(CFLAGS) -o test_unit test_unit.o karnaugh.o $(CXXFLAGS) $(LIB)
+test_unit: test_unit.o public.o bool.o karnaugh.o
+	$(CC) $(CFLAGS) -o test_unit test_unit.o public.o bool.o karnaugh.o $(CXXFLAGS) $(LIB)
 
 # Object generation from source and header for MAIN
 main.o: ./src/public.h ./src/public.c ./src/bool.h ./src/bool.c ./src/user.h ./src/user.c ./src/karnaugh.h ./src/karnaugh.c ./src/main.c

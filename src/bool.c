@@ -16,6 +16,10 @@ void initialize_from_BE(int var_count, char* bool_exp) {
     current_eq.bool_exp = bool_exp;
 }
 
+char* format_BE(char* input, char valid_chars[]) {
+    return input;
+}
+
 char* convert_TT_to_BE(int var_count, int** truth_table) {
     char* temp = "test";
     return temp;
@@ -42,15 +46,15 @@ void print_truth_line(int line, int last_column_index, int** truth_table) {
 }
 
 void print_truth_header(int var_count) {
-    int var_char = 65;          // ASCII value for 'A'
+    int var_char = a_ascii;
     printf("\n");
     for (int i = 0; i < var_count + 1; i++)
         if (i == var_count)
-            printf("%c\n", 83);
+            printf("%c\n", s_ascii);
         else
             printf("%c\t", var_char++);
 }
 
 void print_bool_exp(char* bool_exp) {
-    printf("\n%s\n", bool_exp);
+    printf("\nS = %s\n", bool_exp);
 }

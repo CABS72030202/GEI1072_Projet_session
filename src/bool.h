@@ -17,6 +17,7 @@ extern Equation current_eq;             // Global variable that stocks the curre
 // Functions
 void initialize_from_TT(int, int**);    // Initialize every attributes of the global variable "current_eq" knowing the truth table
 void initialize_from_BE(int, char*);    // Initialize every attributes of the global variable "current_eq" knowing the boolean expression
+char* format_BE(char*, char[]);                 // Formats the boolean expression by removing unecessary characters and adding required ones 
 char* convert_TT_to_BE(int, int**);     // Define the boolean expression of an equation with the associated truth table
 int** convert_BE_to_TT(int, char*);     // Define the truth table of an equation with the associated boolean expression
 void print_truth_table(int, int**);     // Print a truth table with its header

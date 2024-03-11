@@ -3,7 +3,9 @@
 
 
 // insert code here 
-void check_produit(void);
+void check_format_BE(void);
+void check_delete_char(void);
+void check_is_string_valid(void);
 const int SKIP = 1;
 
 #endif
