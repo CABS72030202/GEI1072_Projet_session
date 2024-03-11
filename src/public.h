@@ -9,6 +9,7 @@ extern const int a_ascii;                       // Defines the numeral ASCII val
 extern const int s_ascii;                       // Defines the numeral ASCII value of the capital letter 'S' (boolean variable used to reference the result of the equation)
 void exitError(char*);                          // Exit the program and print a specific message (function name | file name)
 char* delete_char(char[], char);                // Delete all instances of a specific character
-int is_string_valid(char*, char[]);       // Verifies if the string input is valid
+int is_string_valid(char*, char[]);             // Verifies if a string is only composed of specific characters
+int is_char_valid(char, char[]);                // Verifies if a character is contained in an array
 
 #endif

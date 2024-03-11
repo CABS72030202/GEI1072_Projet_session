@@ -112,7 +112,7 @@ char* valid_string_input(char valid_chars[]) {
     while (input[len] != '\0' && input[len] != '\n')
         len++;
     if (!is_string_valid(input, valid_chars)) {
-        printf("\nINVALID INPUT.\nPlease try again.\n");
+        printf("\nSAISIE INVALIDE.\nVeuillez essayer à nouveau.\n");
         return valid_string_input(valid_chars);
     }
     char* result = (char*)malloc(len + 1);

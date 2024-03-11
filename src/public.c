@@ -30,14 +30,14 @@ char* delete_char(char old_str[], char delete) {
     }
 }
 
-int is_string_valid(char* input, char valid_chars[]) {
+int is_string_valid(char* str, char valid_chars[]) {
     size_t len = 0;
-    while (input[len] != '\0' && input[len] != '\n')
+    while (str[len] != '\0' && str[len] != '\n')
         len++;
     for (size_t i = 0; i < len; i++) {
         int charIsValid = 0;
         for (size_t j = 0; valid_chars[j] != '\0'; j++) 
-            if (toupper(input[i]) == toupper(valid_chars[j])) {
+            if (toupper(str[i]) == toupper(valid_chars[j])) {
                 charIsValid = 1;
                 break;
             }  
@@ -45,4 +45,11 @@ int is_string_valid(char* input, char valid_chars[]) {
             return 0;
     }
     return 1;
+}
+
+int is_char_valid(char c, char valid_chars[]) {
+    for(int i = 0; i < strlen(valid_chars); i++)
+        if(valid_chars[i] == c) 
+            return 1;
+    return 0;
 }

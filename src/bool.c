@@ -16,8 +16,34 @@ void initialize_from_BE(int var_count, char* bool_exp) {
     current_eq.bool_exp = bool_exp;
 }
 
-char* format_BE(char* input, char valid_chars[]) {
-    return input;
+char* format_BE(char* old_BE, char valid_chars[]) {
+    if(strlen(old_BE) == 0)                             // Empty string
+        goto E;
+    int is_valid = 0, parenthesis_count = 0;
+    for(int i = 0; i < strlen(old_BE); i++) {
+        if(is_valid == 0 && ((int)old_BE[i] >= a_ascii && (int)old_BE[i] <= s_ascii))
+            is_valid = 1;
+        if(old_BE[i] == '(')
+            parenthesis_count++;
+        else if(old_BE[i] == ')')
+            parenthesis_count--;
+    }
+    if(!is_valid || parenthesis_count)                  // Not any variable or incoherent parenthesis
+        goto E;
+    char* new_BE = delete_char(old_BE, ' ');            // Delete space
+    if(is_char_valid(new_BE[strlen(new_BE) - 1], "+.(@") == 1 ||
+       is_char_valid(new_BE[0], "+\'.)@") == 1)         // Invalid first or last character
+        goto E;
+    for (int i = 0; new_BE[i] != '\0'; i++)             // Two consecutive operators
+        if ((new_BE[i] == '+' || new_BE[i] == '.' || new_BE[i] == '@' || new_BE[i] == '(') &&
+            (new_BE[i + 1] == '+' || new_BE[i + 1] == '.' || new_BE[i + 1] == '@' || 
+            new_BE[i + 1] == '\'' || new_BE[i + 1] == ')')) 
+            goto E;
+    return new_BE;
+
+E:  // Formatting error
+    printf("\nCONVERSION IMPOSSIBLE.\nVeuillez essayer à nouveau.\n");
+    return NULL;
 }
 
 char* convert_TT_to_BE(int var_count, int** truth_table) {
