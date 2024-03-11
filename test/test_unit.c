@@ -49,9 +49,28 @@ void check_is_string_valid(void)
     TEST_CHECK(is_string_valid("A+B+C", "A") == 0);
 }
 
+void check_boolean_operations(void) 
+{
+    TEST_CHECK(or(0,0) == 0);
+    TEST_CHECK(and(0,0) == 0);
+    TEST_CHECK(xor(0,0) == 0);
+    TEST_CHECK(inv(0) == 1);
+    TEST_CHECK(or(0,1) == 1);
+    TEST_CHECK(and(0,1) == 0);
+    TEST_CHECK(xor(0,1) == 1);
+    TEST_CHECK(or(1,0) == 1);
+    TEST_CHECK(and(1,0) == 0);
+    TEST_CHECK(xor(1,0) == 1);
+    TEST_CHECK(inv(1) == 0);
+    TEST_CHECK(or(1,1) == 1);
+    TEST_CHECK(and(1,1) == 1);
+    TEST_CHECK(xor(1,1) == 0);
+}
+
 TEST_LIST = {
     {"check_format_BE", check_format_BE},
     {"check_delete_char", check_delete_char},
     {"check_is_string_valid", check_is_string_valid},
+    {"check_boolean_operations", check_boolean_operations},
     {0}
 };

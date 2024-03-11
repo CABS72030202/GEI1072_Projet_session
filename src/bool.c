@@ -52,9 +52,20 @@ char* convert_TT_to_BE(int var_count, int** truth_table) {
 }
 
 int** convert_BE_to_TT(int var_count, char* bool_exp) {
-    int temp = 34;
-    int p_temp = &temp;
-    return &p_temp;
+    int** truth_table = (int**)malloc(pow(2, var_count) * sizeof(int*));
+    for(int i = 0; i < pow(2, var_count); i++) {
+        truth_table[i] = (int*)malloc((var_count + 1) * sizeof(int));
+        for (int j = 0; j < var_count + 1; j++)
+            if(j == var_count)
+                truth_table[i][j] = calc_TT_line(var_count, truth_table[i], bool_exp);
+            else
+                truth_table[i][j] = (i >> (var_count - 1 - j)) & 1;
+    }
+    return truth_table;
+}
+
+int calc_TT_line(int var_count, int var_values[], char* bool_exp) {
+    return 0;
 }
 
 void print_truth_table(int var_count, int** truth_table) {
@@ -84,3 +95,12 @@ void print_truth_header(int var_count) {
 void print_bool_exp(char* bool_exp) {
     printf("\nS = %s\n", bool_exp);
 }
+
+// Boolean operations
+int or(int a, int b) { return a | b; }
+
+int and(int a, int b) { return a & b; }
+
+int xor(int a, int b) { return a ^ b; }
+
+int inv(int a) { return abs(a - 1); }

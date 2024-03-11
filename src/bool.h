@@ -20,9 +20,16 @@ void initialize_from_BE(int, char*);    // Initialize every attributes of the gl
 char* format_BE(char*, char[]);         // Formats the boolean expression by removing unecessary characters and adding required ones 
 char* convert_TT_to_BE(int, int**);     // Define the boolean expression of an equation with the associated truth table
 int** convert_BE_to_TT(int, char*);     // Define the truth table of an equation with the associated boolean expression
+int calc_TT_line(int, int[], char*);         // Calculate the value of S from a specific boolean combination for a boolean expression
 void print_truth_table(int, int**);     // Print a truth table with its header
 void print_truth_line(int, int, int**); // Print a specific line of a truth table
 void print_truth_header(int);           // Print the header of a truth table
 void print_bool_exp(char*);             // Print a boolean expression
+
+// Boolean operations
+int or(int, int);                               // +
+int and(int, int);                              // .
+int xor(int, int);                              // @
+int inv(int);                              // '
 
 #endif
