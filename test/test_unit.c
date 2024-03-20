@@ -4,6 +4,7 @@
 #include "../src/public.h"
 #include "../src/bool.h"
 #include "../src/karnaugh.h"
+#include "../src/calc.h"
 
 void check_format_BE(void) 
 {
@@ -67,10 +68,21 @@ void check_boolean_operations(void)
     TEST_CHECK(xor(1,1) == 0);
 }
 
+void check_eval_exp(void) 
+{
+    TEST_CHECK(eval_exp("1+1") == 2);
+    TEST_CHECK(eval_exp("(3+4)*(5-2)") == 21);
+    TEST_CHECK(eval_exp("3*(4+2)/2") == 9);
+    TEST_CHECK(eval_exp("(5+2*3)-(4/2)") == 9);
+    TEST_CHECK(eval_exp("2*(7-3)+8/4") == 10);
+    TEST_CHECK(eval_exp("10/(5-3)+7*2") == 19);
+}
+
 TEST_LIST = {
     {"check_format_BE", check_format_BE},
     {"check_delete_char", check_delete_char},
     {"check_is_string_valid", check_is_string_valid},
     {"check_boolean_operations", check_boolean_operations},
+    {"check_eval_exp", check_eval_exp},
     {0}
 };

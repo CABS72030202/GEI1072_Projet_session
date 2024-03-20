@@ -5,15 +5,15 @@ VPATH = lib:src:test
 LIB = -lm
 
 # Main executable construction
-main: main.o public.o bool.o user.o karnaugh.o
-	$(CC) $(CFLAGS) -o main main.o public.o bool.o user.o karnaugh.o $(LIB)
+main: main.o public.o bool.o calc.o user.o karnaugh.o
+	$(CC) $(CFLAGS) -o main main.o public.o bool.o calc.o user.o karnaugh.o $(LIB)
 
 # Test unit executable construction
-test_unit: test_unit.o public.o bool.o karnaugh.o
-	$(CC) $(CFLAGS) -o test_unit test_unit.o public.o bool.o karnaugh.o $(CXXFLAGS) $(LIB)
+test_unit: test_unit.o public.o bool.o calc.o karnaugh.o
+	$(CC) $(CFLAGS) -o test_unit test_unit.o public.o bool.o calc.o karnaugh.o $(CXXFLAGS) $(LIB)
 
 # Object generation from source and header for MAIN
-main.o: ./src/public.h ./src/public.c ./src/bool.h ./src/bool.c ./src/user.h ./src/user.c ./src/karnaugh.h ./src/karnaugh.c ./src/main.c
+main.o: ./src/public.h ./src/public.c ./src/bool.h ./src/bool.c ./src/calc.h ./src/calc.c ./src/user.h ./src/user.c ./src/karnaugh.h ./src/karnaugh.c ./src/main.c
 	$(CC) $(CFLAGS) -c ./src/main.c -o main.o $(CXXFLAGS)
 
 # Object generation from source and header for TEST_UNIT
@@ -25,8 +25,12 @@ public.o: ./src/public.h ./src/public.c
 	$(CC) $(CFLAGS) -c ./src/public.c -o public.o $(CXXFLAGS)
 
 # Object generation from source and header for BOOL
-bool.o: ./src/public.h ./src/public.c ./src/bool.h ./src/bool.c 
+bool.o: ./src/public.h ./src/public.c ./src/bool.h ./src/bool.c ./src/calc.h ./src/calc.c 
 	$(CC) $(CFLAGS) -c ./src/bool.c -o bool.o $(CXXFLAGS)
+
+# Object generation from source and header for CALC
+calc.o: ./src/public.h ./src/public.c ./src/calc.h ./src/calc.c 
+	$(CC) $(CFLAGS) -c ./src/calc.c -o calc.o $(CXXFLAGS)
 
 # Object generation from source and header for USER
 user.o: ./src/public.h ./src/public.c ./src/bool.h ./src/bool.c ./src/user.h ./src/user.c
