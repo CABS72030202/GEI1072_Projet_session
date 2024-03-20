@@ -26,10 +26,4 @@ void print_truth_line(int, int, int**); // Print a specific line of a truth tabl
 void print_truth_header(int);           // Print the header of a truth table
 void print_bool_exp(char*);             // Print a boolean expression
 
-// Boolean operations
-int or(int, int);                               // +
-int and(int, int);                              // .
-int xor(int, int);                              // @
-int inv(int);                              // '
-
 #endif

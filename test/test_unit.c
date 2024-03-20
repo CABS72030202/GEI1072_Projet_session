@@ -23,7 +23,7 @@ void check_format_BE(void)
     TEST_CHECK(strcmp(format_BE("A+(B+C)", valid_chars), "A+(B+C)") == 0);
     TEST_CHECK(strcmp(format_BE("A.B+(C.D+A)(A+C)", valid_chars), "A.B+(C.D+A)(A+C)") == 0);
 
-    // Invalid first or last character
+    // notalid first or last character
     TEST_CHECK(format_BE(".A+B", valid_chars) == NULL);
     TEST_CHECK(format_BE("(A+B)+", valid_chars) == NULL);
     TEST_CHECK(format_BE("'A+B", valid_chars) == NULL);
@@ -55,14 +55,14 @@ void check_boolean_operations(void)
     TEST_CHECK(or(0,0) == 0);
     TEST_CHECK(and(0,0) == 0);
     TEST_CHECK(xor(0,0) == 0);
-    TEST_CHECK(inv(0) == 1);
+    TEST_CHECK(not(0) == 1);
     TEST_CHECK(or(0,1) == 1);
     TEST_CHECK(and(0,1) == 0);
     TEST_CHECK(xor(0,1) == 1);
     TEST_CHECK(or(1,0) == 1);
     TEST_CHECK(and(1,0) == 0);
     TEST_CHECK(xor(1,0) == 1);
-    TEST_CHECK(inv(1) == 0);
+    TEST_CHECK(not(1) == 0);
     TEST_CHECK(or(1,1) == 1);
     TEST_CHECK(and(1,1) == 1);
     TEST_CHECK(xor(1,1) == 0);
@@ -70,12 +70,18 @@ void check_boolean_operations(void)
 
 void check_eval_exp(void) 
 {
-    TEST_CHECK(eval_exp("1+1") == 2);
-    TEST_CHECK(eval_exp("(3+4)*(5-2)") == 21);
-    TEST_CHECK(eval_exp("3*(4+2)/2") == 9);
-    TEST_CHECK(eval_exp("(5+2*3)-(4/2)") == 9);
-    TEST_CHECK(eval_exp("2*(7-3)+8/4") == 10);
-    TEST_CHECK(eval_exp("10/(5-3)+7*2") == 19);
+    TEST_CHECK(eval_exp("(0'@(1+1))+1") == 1);              // NOT and XOR
+    TEST_CHECK(eval_exp("(1+(0.1))") == 1);                 // OR and AND
+    TEST_CHECK(eval_exp("((1+0')@(1.0))") == 1);            // XOR and NOT
+    TEST_CHECK(eval_exp("((1+1)@(0.0))") == 1);             // XOR and AND
+    TEST_CHECK(eval_exp("((1'@(1+1))@(0.1))") == 1);        // XOR, NOT, and OR
+    TEST_CHECK(eval_exp("((1'@(0.0))+1)") == 1);            // NOT, AND, and OR
+    TEST_CHECK(eval_exp("(1+0')@(1+0)@(1.1)") == 1);        // OR, NOT, AND, and XOR
+    TEST_CHECK(eval_exp("((0.1)@(1+1))+(1.0)") == 1);       // XOR, AND, and OR
+    TEST_CHECK(eval_exp("(1.0)'@(0'@(1+1))") == 1);         // NOT, AND, and XOR
+    TEST_CHECK(eval_exp("(0@(1+0'))+(1.1)") == 1);          // XOR, AND, and OR
+    TEST_CHECK(eval_exp("(0'@(1+0))+(1'@(0.1))") == 0);     // NOT, AND, XOR, and OR
+    TEST_CHECK(eval_exp("(1+(0@(1.0)))+(1'@(1+0))") == 1);  // OR, AND, XOR, and NOT
 }
 
 TEST_LIST = {

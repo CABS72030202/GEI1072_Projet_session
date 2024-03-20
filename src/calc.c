@@ -4,30 +4,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-void preprocess_exp(char *expr) {
-
-    // Remove newline character from the end of the input
-    if (expr[strlen(expr) - 1] == '\n') {
-        expr[strlen(expr) - 1] = '\0';
-    }
-
-    char *src = expr;
-    char *dest = expr;
-    char prev = '\0';
-
-    while (*src != '\0') {
-        if (*src == '(' && prev == ')') {
-            *dest++ = '*'; // Insert a multiplication operator between ')' and '('
-            src++;
-        }
-        *dest++ = *src;
-        prev = *src++;
-    }
-    *dest = '\0'; // Null-terminate the modified string
-}
-
 int eval_exp(char *expr) {
-    // Stack to store operands
+    // Stack to store operands (0 or 1)
     int stack[100];
     int top = -1;
 
@@ -37,42 +15,10 @@ int eval_exp(char *expr) {
 
     // Loop through the expression
     while (*expr) {
-        // If the current character is a digit, extract the number
-        if (isdigit(*expr)) {
-            char *end;
-            int num = strtod(expr, &end);
-            stack[++top] = num;
-            expr = end;
-            
-            // If there is an opening parenthesis right after a number, insert a multiplication operator
-            if (*end == '(') {
-                opStack[++opTop] = '*';
-            }
-        }
-        // If the current character is an operator
-        else if (*expr == '+' || *expr == '-' || *expr == '*' || *expr == '/') {
-            // Perform operations until the top operator has higher precedence or the operator stack is empty
-            while (opTop >= 0 && precedence(opStack[opTop]) >= precedence(*expr)) {
-                // Perform calculation
-                int b = stack[top--];
-                int a = stack[top--];
-                char op = opStack[opTop--];
-                switch (op) {
-                    case '+':
-                        stack[++top] = a + b;
-                        break;
-                    case '-':
-                        stack[++top] = a - b;
-                        break;
-                    case '*':
-                        stack[++top] = a * b;
-                        break;
-                    case '/':
-                        stack[++top] = a / b;
-                        break;
-                }
-            }
-            opStack[++opTop] = *expr;
+        // If the current character is a digit (0 or 1), extract the operand
+        if (*expr == '0' || *expr == '1') {
+            int operand = *expr - '0';
+            stack[++top] = operand;
             expr++;
         }
         // If the current character is an opening parenthesis
@@ -84,26 +30,18 @@ int eval_exp(char *expr) {
         else if (*expr == ')') {
             // Perform operations until an opening parenthesis is encountered
             while (opTop >= 0 && opStack[opTop] != '(') {
-                // Perform calculation
-                int b = stack[top--];
-                int a = stack[top--];
-                char op = opStack[opTop--];
-                switch (op) {
-                    case '+':
-                        stack[++top] = a + b;
-                        break;
-                    case '-':
-                        stack[++top] = a - b;
-                        break;
-                    case '*':
-                        stack[++top] = a * b;
-                        break;
-                    case '/':
-                        stack[++top] = a / b;
-                        break;
-                }
+                perform_op(stack, &top, opStack, &opTop);
             }
             opTop--; // Pop the opening parenthesis
+            expr++;
+        }
+        // If the current character is an operator
+        else if (*expr == '+' || *expr == '.' || *expr == '\'' || *expr == '@') {
+            // Perform operations until the top operator has higher precedence or the operator stack is empty
+            while (opTop >= 0 && precedence(opStack[opTop]) >= precedence(*expr)) {
+                perform_op(stack, &top, opStack, &opTop);
+            }
+            opStack[++opTop] = *expr;
             expr++;
         }
         else {
@@ -113,34 +51,62 @@ int eval_exp(char *expr) {
 
     // Perform remaining operations
     while (opTop >= 0) {
-        // Perform calculation
-        int b = stack[top--];
-        int a = stack[top--];
-        char op = opStack[opTop--];
-        switch (op) {
-            case '+':
-                stack[++top] = a + b;
-                break;
-            case '-':
-                stack[++top] = a - b;
-                break;
-            case '*':
-                stack[++top] = a * b;
-                break;
-            case '/':
-                stack[++top] = a / b;
-                break;
-        }
+        perform_op(stack, &top, opStack, &opTop);
     }
 
-    // Return the result
+    // Return the final result
     return stack[top];
 }
 
-int precedence(char op) {
-    if (op == '+' || op == '-')
-        return 1;
-    if (op == '*' || op == '/')
-        return 2;
-    return 0;
+int perform_op(int stack[], int *top, char opStack[], int *opTop) {
+    int result = 0;
+    int b = stack[(*top)--];
+    int a = 0;
+
+    // For NOT operator, only one operand is needed
+    if (opStack[*opTop] != '\'') {
+        a = stack[(*top)--];
+    }
+
+    char op = opStack[(*opTop)--];
+    switch (op) {
+        case '+':
+            result = or(a, b);
+            break;
+        case '.':
+            result = and(a, b);
+            break;
+        case '\'':
+            result = not(b);
+            break;
+        case '@':
+            result = xor(a, b);
+            break;
+    }
+    stack[++(*top)] = result;
+    return result;
 }
+
+int precedence(char op) {
+    switch (op) {
+        case '+':
+            return 1;
+        case '.':
+            return 2;
+        case '\'':
+            return 3;
+        case '@':
+            return 4;
+        default:
+            return 0;
+    }
+}
+
+// Boolean operations
+int or(int a, int b) { return a | b; }
+
+int and(int a, int b) { return a & b; }
+
+int xor(int a, int b) { return a ^ b; }
+
+int not(int a) { return abs(a - 1); }

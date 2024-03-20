@@ -95,12 +95,3 @@ void print_truth_header(int var_count) {
 void print_bool_exp(char* bool_exp) {
     printf("\nS = %s\n", bool_exp);
 }
-
-// Boolean operations
-int or(int a, int b) { return a | b; }
-
-int and(int a, int b) { return a & b; }
-
-int xor(int a, int b) { return a ^ b; }
-
-int inv(int a) { return abs(a - 1); }
