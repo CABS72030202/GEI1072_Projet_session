@@ -68,11 +68,29 @@ void check_boolean_operations(void)
     TEST_CHECK(xor(1,1) == 0);
 }
 
+void check_calc_TT_line(void)
+{
+    int values2[2] = {0,1}, values3[3] = {0,1,1};
+    TEST_CHECK(calc_TT_line(2, values2, "A+B") == 1);
+    TEST_CHECK(calc_TT_line(2, values2, "AB") == 0);
+    TEST_CHECK(calc_TT_line(2, values2, "A@B") == 1);
+    TEST_CHECK(calc_TT_line(3, values3, "AB+BC") == 1);
+    TEST_CHECK(calc_TT_line(3, values3, "A(B+C)") == 0);
+    TEST_CHECK(calc_TT_line(3, values3, "A+B+C") == 1);
+    TEST_CHECK(calc_TT_line(3, values3, "A+B.C") == 1);
+    TEST_CHECK(calc_TT_line(3, values3, "A.B.C") == 0);
+    TEST_CHECK(calc_TT_line(3, values3, "AB+C") == 1);
+    TEST_CHECK(calc_TT_line(3, values3, "A+B+BC") == 1);
+    TEST_CHECK(calc_TT_line(3, values3, "(A+B)(B+C)") == 1);
+    TEST_CHECK(calc_TT_line(3, values3, "A(B+C)B") == 0);
+    TEST_CHECK(calc_TT_line(3, values3, "A+B+(B+C)") == 1);
+}
+
 void check_eval_exp(void) 
 {
     TEST_CHECK(eval_exp("(0'@(1+1))+1") == 1);              // NOT and XOR
-    TEST_CHECK(eval_exp("(1+(0.1))") == 1);                 // OR and AND
-    TEST_CHECK(eval_exp("((1+0')@(1.0))") == 1);            // XOR and NOT
+    TEST_CHECK(eval_exp("(1+(0.1))'") == 0);                // OR and AND
+    TEST_CHECK(eval_exp("((1+0')@(1.0)')") == 0);           // XOR and NOT
     TEST_CHECK(eval_exp("((1+1)@(0.0))") == 1);             // XOR and AND
     TEST_CHECK(eval_exp("((1'@(1+1))@(0.1))") == 1);        // XOR, NOT, and OR
     TEST_CHECK(eval_exp("((1'@(0.0))+1)") == 1);            // NOT, AND, and OR
@@ -89,6 +107,7 @@ TEST_LIST = {
     {"check_delete_char", check_delete_char},
     {"check_is_string_valid", check_is_string_valid},
     {"check_boolean_operations", check_boolean_operations},
+    {"check_calc_TT_line", check_calc_TT_line},
     {"check_eval_exp", check_eval_exp},
     {0}
 };

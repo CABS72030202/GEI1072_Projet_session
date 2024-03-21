@@ -1,4 +1,5 @@
 #include "../src/bool.h"
+#include "../src/calc.h"
 #include "../src/public.h"
 #include <stdio.h>
 
@@ -65,7 +66,17 @@ int** convert_BE_to_TT(int var_count, char* bool_exp) {
 }
 
 int calc_TT_line(int var_count, int var_values[], char* bool_exp) {
-    return 0;
+    if (strlen(bool_exp) > 100)
+        exitError("Exceeded allocated memory | calc_TT_line | bool.c");
+    char temp[100];
+    int index = 0;
+    for (int i = 0; bool_exp[i] != '\0'; i++) 
+        if (bool_exp[i] >= a_ascii && bool_exp[i] <= (a_ascii + var_count)) 
+            temp[index++] = (char)(var_values[bool_exp[i] - a_ascii] + '0');   // Convert value to character
+        else 
+            temp[index++] = bool_exp[i];
+        temp[index] = '\0';
+        return eval_exp(temp);
 }
 
 void print_truth_table(int var_count, int** truth_table) {

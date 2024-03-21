@@ -4,7 +4,37 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+char* preprocess_exp(char* expr) {
+    // Allocate memory for the processed expression
+    char* processed = (char*)malloc(2 * strlen(expr) * sizeof(char));
+    if (processed == NULL) 
+        exitError("preprocess_exp | calc.c");
+
+    int index = 0; // Index to track the position in the processed expression
+
+    while (*expr) {
+        // Copy current character to the processed expression
+        processed[index++] = *expr;
+
+        // If the current character is a digit (0 or 1) or a closing parenthesis
+        if (isdigit(*expr) || *expr == ')') {
+            // If the next character is a digit (0 or 1) or an opening parenthesis, insert a dot
+            if (isdigit(*(expr + 1)) || *(expr + 1) == '(')
+                processed[index++] = '.';
+        }
+        // Move to the next character in the original expression
+        expr++;
+    }
+
+    // Null-terminate the processed expression
+    processed[index] = '\0';
+
+    // Return the preprocessed expression
+    return processed;
+}
+
 int eval_exp(char *expr) {
+    expr = preprocess_exp(expr);
     // Stack to store operands (0 or 1)
     int stack[100];
     int top = -1;
