@@ -3,5 +3,6 @@
         "user.h": "c",
         "public.h": "c",
         "bool.h": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

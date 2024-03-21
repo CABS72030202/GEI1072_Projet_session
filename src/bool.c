@@ -2,7 +2,7 @@
 #include "../src/calc.h"
 #include "../src/public.h"
 #include <stdio.h>
-
+ 
 Equation current_eq;
 
 void initialize_from_TT(int var_count, int** truth_table) {
