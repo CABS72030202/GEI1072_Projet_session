@@ -29,11 +29,12 @@ void option_menu() {
     char* choices[] = {
             "Afficher la table de vérité", 
             "Afficher l'expression actuelle", 
+            "Définir le type d'affichage des expressions booléennes par défaut",
             "Déterminer une équation simplifiée équivalente", 
             "Sauvegarder l'équation dans un fichier texte", 
             "Saisir une nouvelle équation booléenne", 
             "Quitter le programme"};
-    int input = menu_selection(choices, 6);
+    int input = menu_selection(choices, sizeof(choices) / 8);
     switch (input) {
         case 1:     // Print truth table
         print_truth_table(current_eq.var_count, current_eq.truth_table);
@@ -41,14 +42,17 @@ void option_menu() {
         case 2:     // Print boolean expression
         print_bool_exp(current_eq.bool_exp);
         break;
-        case 3:     // Simplify boolean equation
+        case 3:     // Define default boolean expression type (SOP or POS)
+        input_bool_exp_type();
         break;
-        case 4:     // Save boolean equation in a text file
+        case 4:     // Simplify boolean equation
         break;
-        case 5:     // Define new boolean equation
+        case 5:     // Save boolean equation in a text file
+        break;
+        case 6:     // Define new boolean equation
         input_type_menu();
         break;
-        case 6:     // Close program
+        case 7:     // Close program
         printf("\nGoodbye!\n");
         exit(0);
         break;
@@ -82,6 +86,14 @@ void input_bool_exp(int var_count) {
         printf("%c  ", a_ascii + i);
     printf("%c\n", s_ascii);
     initialize_from_BE(var_count, valid_string_input(create_valid_chars(var_count)));
+}
+
+void input_bool_exp_type() {
+    char* choices[] = {"Somme de produits", "Produit de sommes"};
+    printf("\n--- Veuillez définir le format par défaut pour les expressions booléennes ---\n");
+    default_bool_exp_type = menu_selection(choices, 2);
+    free(current_eq.bool_exp);
+    current_eq.bool_exp = convert_TT_to_BE(current_eq.var_count, current_eq.truth_table);
 }
 
 // General functions

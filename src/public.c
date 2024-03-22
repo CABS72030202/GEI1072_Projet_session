@@ -2,8 +2,7 @@
 #include <stdio.h>
 
 const int max_vars_count = 4;
-const int default_bool_exp_type = 1;    // 1 = SOP
-//const int default_bool_exp_type = 2;    // 2 = POS
+int default_bool_exp_type = 1;          // 1 = SOP (default), 2 = POS 
 const char valid_char_operators[7] = {'+', '\'', '.', '(', ')', '@', ' '};
 const int a_ascii = 65;
 const int s_ascii = 83;
