@@ -10,7 +10,8 @@ char* preprocess_exp(char* expr) {
     if (processed == NULL) 
         exitError("preprocess_exp | calc.c");
 
-    int index = 0; // Index to track the position in the processed expression
+    int index = 0;  // Index to track the position in the processed expression
+    int pos = 1;    // Index to track the relative position when analysing further in the expression
 
     while (*expr) {
         // Copy current character to the processed expression
@@ -18,12 +19,21 @@ char* preprocess_exp(char* expr) {
 
         // If the current character is a digit (0 or 1) or a closing parenthesis
         if (isdigit(*expr) || *expr == ')') {
+            // If the next character is a ', find the relative position of the next character or digit or opening parenthesis and copy all ' characters to the processed expression
+            
+            while (*(expr + pos) == '\'') {
+                processed[index++] = '\'';
+                pos++;
+            }
             // If the next character is a digit (0 or 1) or an opening parenthesis, insert a dot
-            if (isdigit(*(expr + 1)) || *(expr + 1) == '(')
+            if (isdigit(*(expr + pos)) || *(expr + pos) == '(')
                 processed[index++] = '.';
         }
         // Move to the next character in the original expression
-        expr++;
+        expr += pos;
+
+        // Reset relative position
+        pos = 1;
     }
 
     // Null-terminate the processed expression

@@ -92,6 +92,8 @@ void check_boolean_operations(void) { if(!ignore_check_boolean_operations) {
     TEST_CHECK(or(1,1) == 1);
     TEST_CHECK(and(1,1) == 1);
     TEST_CHECK(xor(1,1) == 0);
+    TEST_CHECK(not(and(or(1,0), 1)) == 0);
+    TEST_CHECK(and(or(and(1,0),0), 1) == 0);
 } else {printf("Ignored test ");}
 }
 
@@ -99,6 +101,8 @@ const int ignore_check_calc_TT_line = 0;
 void check_calc_TT_line(void) { if(!ignore_check_calc_TT_line) {
     int values2[2] = {0,1}, values3[3] = {0,1,1};
     TEST_CHECK(calc_TT_line(2, values2, "A+B") == 1);
+    TEST_CHECK(calc_TT_line(2, values2, "A'+B''") == 1);
+    TEST_CHECK(calc_TT_line(2, values2, "A'B") == 1);
     TEST_CHECK(calc_TT_line(2, values2, "AB") == 0);
     TEST_CHECK(calc_TT_line(2, values2, "(A)(B)") == 0);
     TEST_CHECK(calc_TT_line(2, values2, "A@B") == 1);
@@ -113,11 +117,17 @@ void check_calc_TT_line(void) { if(!ignore_check_calc_TT_line) {
     TEST_CHECK(calc_TT_line(3, values3, "A(B+C)B") == 0);
     TEST_CHECK(calc_TT_line(3, values3, "A+B+(B+C)") == 1);
     values3[0] = 1; values3[1] = 1; values3[2] = 1;
-    TEST_CHECK(calc_TT_line(3, values3, "AB'C'+ABC'") == 0); 
+    TEST_CHECK(calc_TT_line(3, values3, "A'BC+AB'C+ABC'") == 0);
+    TEST_CHECK(calc_TT_line(3, values3, "(A'+B+C)(A+B'+C)'(A+B+C')") == 0);
+    TEST_CHECK(calc_TT_line(3, values3, "AB'C'+ABC'") == 0);
+    TEST_CHECK(calc_TT_line(3, values3, "(A+B'+C')'(A+B+C')'") == 0);
     TEST_CHECK(calc_TT_line(3, values3, "AB'C'") == 0);
+    TEST_CHECK(calc_TT_line(3, values3, "(A+B'+C')") == 1);        
+    TEST_CHECK(calc_TT_line(3, values3, "A'B'C") == 0);
     TEST_CHECK(calc_TT_line(3, values3, "ABC'") == 0);
     TEST_CHECK(calc_TT_line(3, values3, "(ABC')") == 0);
     TEST_CHECK(calc_TT_line(3, values3, "(ABC)'") == 0);
+    
 } else {printf("Ignored test ");}
 }
 
