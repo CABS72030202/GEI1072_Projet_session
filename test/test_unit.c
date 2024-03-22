@@ -125,13 +125,6 @@ void check_eval_exp(void)
     TEST_CHECK(eval_exp("(1+(0@(1.0)))+(1'@(1+0))") == 1);  // OR, AND, XOR, and NOT
 }
 
-void check_SOP(void)
-{
-    int truth_table[8][4] = {{0, 0, 0, 1}, {0, 0, 1, 0}, {0, 1, 0, 0}, {0, 1, 1, 1},
-                             {1, 0, 0, 0}, {1, 0, 1, 1}, {1, 1, 0, 1}, {1, 1, 1, 1}};
-    TEST_CHECK(sum_of_products(3, truth_table) == "A'B'C'+A'BC+AB'C'+AB'C+ABC'+ABC");
-}
-
 TEST_LIST = {
     {"check_format_BE", check_format_BE},
     {"check_delete_char", check_delete_char},
@@ -140,6 +133,5 @@ TEST_LIST = {
     {"check_boolean_operations", check_boolean_operations},
     {"check_calc_TT_line", check_calc_TT_line},
     {"check_eval_exp", check_eval_exp},
-    //{"check_SOP", check_SOP},
     {0}
 };
