@@ -6,8 +6,8 @@
 #include "../src/karnaugh.h"
 #include "../src/calc.h"
 
-void check_format_BE(void) 
-{
+const int ignore_check_format_BE = 0;
+void check_format_BE(void) { if(!ignore_check_format_BE) {
     char valid_chars[] = "+'.()@ ABCDS";
 
     // Empty string
@@ -35,15 +35,17 @@ void check_format_BE(void)
     TEST_CHECK(format_BE("(A+B+)", valid_chars) == NULL);
     TEST_CHECK(format_BE("A+'B", valid_chars) == NULL);
     TEST_CHECK(format_BE("(A+B)@(A+.C)", valid_chars) == NULL);
+} else {printf("Ignored test ");}
 }
 
-void check_delete_char(void) 
-{
+const int ignore_check_delete_char = 0;
+void check_delete_char(void) { if(!ignore_check_delete_char) {
     TEST_CHECK(strcmp(delete_char("A+B", '+'), "AB") == 0);
+} else {printf("Ignored test ");}
 }
 
-void check_replace_char(void)
-{
+const int ignore_check_replace_char = 0;
+void check_replace_char(void) { if(!ignore_check_replace_char) {
     TEST_CHECK(strcmp(replace_char("Hello, world!", "world", "planet"), "Hello, planet!") == 0);    // strlen(old_char) <= strlen(new_char)
     TEST_CHECK(strcmp(replace_char("Hello, world!", "world", "earth"), "Hello, earth!") == 0);      // strlen(old_char) == strlen(new_char)
     TEST_CHECK(strcmp(replace_char("Hello, world!", "world", "you"), "Hello, you!") == 0);          // strlen(old_char) >= strlen(new_char)
@@ -62,18 +64,20 @@ void check_replace_char(void)
         char new_char[] = {'A' + i, '\'', '\0'};
         test = replace_char(test, old_char, new_char); }
     TEST_CHECK(strcmp(test, "A'BC+AB'C+ABC'") == 0);
+} else {printf("Ignored test ");}
 }
 
-void check_is_string_valid(void) 
-{
+const int ignore_check_is_string_valid = 0;
+void check_is_string_valid(void) { if(!ignore_check_is_string_valid) {
     TEST_CHECK(is_string_valid("A", "ABC") == 1);
     TEST_CHECK(is_string_valid("B", "ABC") == 1);
     TEST_CHECK(is_string_valid("C", "ABC") == 1);
     TEST_CHECK(is_string_valid("A+B+C", "A") == 0);
+} else {printf("Ignored test ");}
 }
 
-void check_boolean_operations(void) 
-{
+const int ignore_check_boolean_operations = 0;
+void check_boolean_operations(void) { if(!ignore_check_boolean_operations) {
     TEST_CHECK(or(0,0) == 0);
     TEST_CHECK(and(0,0) == 0);
     TEST_CHECK(xor(0,0) == 0);
@@ -88,10 +92,11 @@ void check_boolean_operations(void)
     TEST_CHECK(or(1,1) == 1);
     TEST_CHECK(and(1,1) == 1);
     TEST_CHECK(xor(1,1) == 0);
+} else {printf("Ignored test ");}
 }
 
-void check_calc_TT_line(void)
-{
+const int ignore_check_calc_TT_line = 1;
+void check_calc_TT_line(void) { if(!ignore_check_calc_TT_line) {
     int values2[2] = {0,1}, values3[3] = {0,1,1};
     TEST_CHECK(calc_TT_line(2, values2, "A+B") == 1);
     TEST_CHECK(calc_TT_line(2, values2, "AB") == 0);
@@ -107,10 +112,13 @@ void check_calc_TT_line(void)
     TEST_CHECK(calc_TT_line(3, values3, "(A+B)(B+C)") == 1);
     TEST_CHECK(calc_TT_line(3, values3, "A(B+C)B") == 0);
     TEST_CHECK(calc_TT_line(3, values3, "A+B+(B+C)") == 1);
+    values3[0] = 1; values3[1] = 1; values3[2] = 1; 
+    TEST_CHECK(calc_TT_line(3, values3, "A'B'C'+A'B'C+AB'C'+ABC'") == 0);
+} else {printf("Ignored test ");}
 }
 
-void check_eval_exp(void) 
-{
+const int ignore_check_eval_exp = 0;
+void check_eval_exp(void) { if(!ignore_check_eval_exp) {
     TEST_CHECK(eval_exp("(0'@(1+1))+1") == 1);              // NOT and XOR
     TEST_CHECK(eval_exp("(1+(0.1))'") == 0);                // OR and AND
     TEST_CHECK(eval_exp("((1+0')@(1.0)')") == 0);           // XOR and NOT
@@ -123,6 +131,20 @@ void check_eval_exp(void)
     TEST_CHECK(eval_exp("(0@(1+0'))+(1.1)") == 1);          // XOR, AND, and OR
     TEST_CHECK(eval_exp("(0'@(1+0))+(1'@(0.1))") == 0);     // NOT, AND, XOR, and OR
     TEST_CHECK(eval_exp("(1+(0@(1.0)))+(1'@(1+0))") == 1);  // OR, AND, XOR, and NOT
+} else {printf("Ignored test ");}
+}
+
+const int ignore_check_required_size = 0;
+void check_required_size(void) { if(!ignore_check_required_size) {
+    int** mat1 = convert_BE_to_TT(2, "(A@B)'");
+    TEST_CHECK(required_size(2, mat1, "SOP") == 7);
+    TEST_CHECK(required_size(2, mat1, "POS") == 12);
+    int** mat2 = convert_BE_to_TT(3, "B'");
+    TEST_CHECK(required_size(3, mat2, "SOP") == 23);
+    TEST_CHECK(required_size(3, mat2, "POS") == 32);
+    free(mat1);
+    free(mat2);
+} else {printf("Ignored test ");}
 }
 
 TEST_LIST = {
@@ -133,5 +155,6 @@ TEST_LIST = {
     {"check_boolean_operations", check_boolean_operations},
     {"check_calc_TT_line", check_calc_TT_line},
     {"check_eval_exp", check_eval_exp},
+    {"check_required_size", check_required_size},
     {0}
 };

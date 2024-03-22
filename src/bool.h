@@ -21,6 +21,7 @@ char* format_BE(char*, char[]);         // Formats the boolean expression by rem
 char* convert_TT_to_BE(int, int**);     // Define the boolean expression of an equation with the associated truth table
 char* sum_of_products(int, int**);
 char* product_of_sums(int, int**);
+int required_size(int, int**, char*);   // Calculates the number of slots required in a char array for a boolean expression of form SOP or POS
 int** convert_BE_to_TT(int, char*);     // Define the truth table of an equation with the associated boolean expression
 int calc_TT_line(int, int[], char*);    // Calculate the value of S from a specific boolean combination for a boolean expression
 void print_truth_table(int, int**);     // Print a truth table with its header

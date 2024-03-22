@@ -63,9 +63,10 @@ char* convert_TT_to_BE(int var_count, int** truth_table) {
 }
 
 char* sum_of_products(int var_count, int** truth_table) {
+    // Memory allocation
+    char* bool_exp = (char*)malloc(required_size(var_count, truth_table, "SOP") * sizeof(char));
     // Construct the boolean expression
     int index = 0, cpt = 0;
-    char* bool_exp;
     for (int i = 0; i < pow(2, var_count); i++)
         if (truth_table[i][var_count] == 1) {
             cpt++;
@@ -95,9 +96,10 @@ char* sum_of_products(int var_count, int** truth_table) {
 }
 
 char* product_of_sums(int var_count, int** truth_table) {
+    // Memory allocation
+    char* bool_exp = (char*)malloc(required_size(var_count, truth_table, "POS") * sizeof(char));
     // Construct the boolean expression
     int index = 0, cpt = 0;
-    char* bool_exp;
     for (int i = 0; i < pow(2, var_count); i++)
         if (truth_table[i][var_count] == 0) {
             cpt++;
@@ -127,6 +129,40 @@ char* product_of_sums(int var_count, int** truth_table) {
         bool_exp = replace_char(bool_exp, old_char, new_char); }
 
     return bool_exp;
+}
+
+int required_size(int var_count, int** truth_table, char* exp_type) {
+    int size = 0;
+    int op_line_size_SOP = 1;                         // AB+CD     -->  1 '+' per line
+    int op_line_size_POS = (var_count - 1) + 2;       // (A+B+C)   --> (var_count - 1) '+' and "()" per line
+    switch(exp_type[0]) {
+        case 'S':
+            for (int i = 0; i < pow(2, var_count); i++)
+                if (truth_table[i][var_count] == 1) {
+                    size += op_line_size_SOP;
+                    for (int j = 0; j < var_count; j++)
+                        if(truth_table[i][j] == 0)
+                            size += 2;               // A' = 2 char
+                        else if(truth_table[i][j] == 1)
+                            size += 1;               // A = 1 char
+                }
+            size--;                                  // Account for the replacement of the last +
+        break;
+        case 'P':
+            for (int i = 0; i < pow(2, var_count); i++)
+                if (truth_table[i][var_count] == 0) {
+                    size += op_line_size_POS;
+                    for (int j = 0; j < var_count; j++)
+                        if(truth_table[i][j] == 0)
+                            size += 2;               // A' = 2 char
+                        else if(truth_table[i][j] == 1)
+                            size += 1;               // A = 1 char
+                }
+        break;
+        default:
+        exitError("Please specify valid boolean expression type | required_size | bool.c");
+    }
+    return size;        
 }
 
 int** convert_BE_to_TT(int var_count, char* bool_exp) {
