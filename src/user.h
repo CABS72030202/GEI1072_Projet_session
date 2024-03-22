@@ -17,6 +17,6 @@ void input_bool_exp(int);                   // Menu letting the user define the 
 int menu_selection(char*[], int);           // Prints formatted menu choices defined in a string array and prompts the user
 int valid_integer_input(int, int);          // Prompts the user for an integer input within a specified range
 char* valid_string_input(char[]);           // Prompts the user for a string input composed of specific characters
-char* create_valid_chars(int);    // Creates a dynamic array defining the valid operators and the valid variables for a boolean expression 
+char* create_valid_chars(int);              // Creates a dynamic array defining the valid operators and the valid variables for a boolean expression 
 
 #endif

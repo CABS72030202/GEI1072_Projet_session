@@ -42,6 +42,28 @@ void check_delete_char(void)
     TEST_CHECK(strcmp(delete_char("A+B", '+'), "AB") == 0);
 }
 
+void check_replace_char(void)
+{
+    TEST_CHECK(strcmp(replace_char("Hello, world!", "world", "planet"), "Hello, planet!") == 0);    // strlen(old_char) <= strlen(new_char)
+    TEST_CHECK(strcmp(replace_char("Hello, world!", "world", "earth"), "Hello, earth!") == 0);      // strlen(old_char) == strlen(new_char)
+    TEST_CHECK(strcmp(replace_char("Hello, world!", "world", "you"), "Hello, you!") == 0);          // strlen(old_char) >= strlen(new_char)
+    TEST_CHECK(strcmp(replace_char("Ab", "b", "B'"), "AB'") == 0);
+
+    char* test = "ab";
+    for(int i = 0; i < 2; i++) {
+        char old_char[] = {'a' + i, '\0'};
+        char new_char[] = {'A' + i, '\'', '\0'};
+        test = replace_char(test, old_char, new_char); }
+    TEST_CHECK(strcmp(test, "A'B'") == 0);
+
+    test = "aBC+AbC+ABc";
+    for(int i = 0; i < 3; i++) {
+        char old_char[] = {'a' + i, '\0'};
+        char new_char[] = {'A' + i, '\'', '\0'};
+        test = replace_char(test, old_char, new_char); }
+    TEST_CHECK(strcmp(test, "A'BC+AB'C+ABC'") == 0);
+}
+
 void check_is_string_valid(void) 
 {
     TEST_CHECK(is_string_valid("A", "ABC") == 1);
@@ -73,6 +95,7 @@ void check_calc_TT_line(void)
     int values2[2] = {0,1}, values3[3] = {0,1,1};
     TEST_CHECK(calc_TT_line(2, values2, "A+B") == 1);
     TEST_CHECK(calc_TT_line(2, values2, "AB") == 0);
+    TEST_CHECK(calc_TT_line(2, values2, "(A)(B)") == 0);
     TEST_CHECK(calc_TT_line(2, values2, "A@B") == 1);
     TEST_CHECK(calc_TT_line(3, values3, "AB+BC") == 1);
     TEST_CHECK(calc_TT_line(3, values3, "A(B+C)") == 0);
@@ -102,12 +125,21 @@ void check_eval_exp(void)
     TEST_CHECK(eval_exp("(1+(0@(1.0)))+(1'@(1+0))") == 1);  // OR, AND, XOR, and NOT
 }
 
+void check_SOP(void)
+{
+    int truth_table[8][4] = {{0, 0, 0, 1}, {0, 0, 1, 0}, {0, 1, 0, 0}, {0, 1, 1, 1},
+                             {1, 0, 0, 0}, {1, 0, 1, 1}, {1, 1, 0, 1}, {1, 1, 1, 1}};
+    TEST_CHECK(sum_of_products(3, truth_table) == "A'B'C'+A'BC+AB'C'+AB'C+ABC'+ABC");
+}
+
 TEST_LIST = {
     {"check_format_BE", check_format_BE},
     {"check_delete_char", check_delete_char},
+    {"check_replace_char", check_replace_char},
     {"check_is_string_valid", check_is_string_valid},
     {"check_boolean_operations", check_boolean_operations},
     {"check_calc_TT_line", check_calc_TT_line},
     {"check_eval_exp", check_eval_exp},
+    //{"check_SOP", check_SOP},
     {0}
 };

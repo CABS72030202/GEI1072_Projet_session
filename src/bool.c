@@ -2,6 +2,8 @@
 #include "../src/calc.h"
 #include "../src/public.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
  
 Equation current_eq;
 
@@ -48,8 +50,57 @@ E:  // Formatting error
 }
 
 char* convert_TT_to_BE(int var_count, int** truth_table) {
-    char* temp = "test";
-    return temp;
+    switch(default_bool_exp_type) {
+        case 1:
+        return sum_of_products(var_count, truth_table);
+        break;
+        case 2:
+        return product_of_sums();
+        break;
+        default:
+        exitError("Undefined default_bool_exp_type | convert_TT_to_BE | bool.c");
+    }
+}
+
+char* sum_of_products(int var_count, int** truth_table) {
+    // Calculate the size of the resulting boolean expression
+    int expression_size = 0;
+    for (int i = 0; i < pow(2, var_count); i++)
+        if (truth_table[i][var_count] == 1)
+            expression_size += var_count + 1;
+
+    // Allocate memory for the boolean expression
+    char* bool_exp = (char*)malloc(expression_size * sizeof(char));
+    if (bool_exp == NULL)
+        exitError("sum_of_products | bool.c");
+
+    // Construct the boolean expression
+    int index = 0;
+    for (int i = 0; i < pow(2, var_count); i++)
+        if (truth_table[i][var_count] == 1) {
+            for (int j = 0; j < var_count; j++) {
+                if (truth_table[i][j] == 0) 
+                    bool_exp[index++] = tolower(a_ascii + j);
+                else
+                    bool_exp[index++] = toupper(a_ascii + j);
+            }
+            bool_exp[index++] = '+';
+        }
+
+    // Replace the last '+' with null terminator
+    bool_exp[index - 1] = '\0';
+
+    // Replace lowercase letters to its uppercase letter followed by '
+    for(int i = 0; i < var_count; i++) {
+        char old_char[] = {(a_ascii + 32) + i, '\0'};
+        char new_char[] = {a_ascii + i, '\'', '\0'};
+        bool_exp = replace_char(bool_exp, old_char, new_char); }
+
+    return bool_exp;
+}
+
+char* product_of_sums() {
+    return "test";
 }
 
 int** convert_BE_to_TT(int var_count, char* bool_exp) {
