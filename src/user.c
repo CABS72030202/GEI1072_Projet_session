@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "math.h"
 #include <ctype.h>
-
+ 
 // Specific functions
 void input_type_menu() {
     printf("\n--- Veuillez choisir un type de saisie parmi les suivants ---\n");
