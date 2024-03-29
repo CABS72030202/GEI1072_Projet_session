@@ -1,5 +1,6 @@
 #include "../src/public.h"
 #include "../src/bool.h"
+#include "../src/file.h"
 #include "../src/user.h"
 #include <stdio.h>
 #include "math.h"
@@ -48,6 +49,7 @@ void option_menu() {
         case 4:     // Simplify boolean equation
         break;
         case 5:     // Save boolean equation in a text file
+        save_equation(&current_eq);
         break;
         case 6:     // Define new boolean equation
         input_type_menu();
