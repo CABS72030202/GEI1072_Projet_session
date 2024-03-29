@@ -8,7 +8,7 @@ const int a_ascii = 65;
 const int s_ascii = 83;
 
 void exitError(char* error) {
-    printf("\n\n\nERREUR \"%s\". FIN DU PROGRAMME\n\n\n", error);
+    printf("\n\n\nERROR OCCURED HERE : \"%s\". END OF PROGRAM.\n\n\n", error);
     exit(1);
 }
 

@@ -47,11 +47,16 @@ char* change_repo(char* new_name) {
 }
 
 void save_equation(Equation* eq) {
-    char* file_name = generate_file_name();
-    printf("\ntest : %s\n", file_name);
+    FILE *file;
+    char* file_path = generate_file_path();
+    if ((file = fopen(file_path, "w")) == NULL) 
+        exitError("save_equation | file.c");
+    print_bool_exp(eq->bool_exp, file);
+    print_truth_table(eq->var_count, eq->truth_table, file);
+    fclose(file);
 }
 
-char* generate_file_name() {
+char* generate_file_path() {
     curr_file_count++;
     int i, new_size, j = curr_file_count;
     for(new_size = strlen(curr_file_name); j != 0; new_size++)
@@ -66,18 +71,16 @@ char* generate_file_name() {
         new_file_name[new_size - i] = (char)(j % 10) + 48;
         j /= 10;
     }
-    char* file_name = (char*)malloc(sizeof(char) * (strlen(new_file_name) + 4));
-    sprintf(file_name, "%s%s", new_file_name, ".txt");
-    if(!valid_file_name(file_name))
-        new_file_name = generate_file_name();
+    char* file_path = (char*)malloc(sizeof(char) * (strlen(curr_repo) + strlen(new_file_name) + 4));
+    sprintf(file_path, "%s%s%s", curr_repo, new_file_name, ".txt");
+    if(!valid_file_path(file_path))
+        new_file_name = generate_file_path();
     else 
-        return file_name;
+        return file_path;
 }
 
-int valid_file_name(char* file_name) {
+int valid_file_path(char* file_path) {
     FILE *file;
-    char* file_path = (char*)malloc(sizeof(char) * (strlen(file_name) + strlen(curr_repo)));
-    sprintf(file_path, "%s/%s", curr_repo, file_name);  // Construct file path
     if ((file = fopen(file_path, "r")) != NULL) {       // Try to open the file
         fclose(file);
         return 0;                                       // File already exists

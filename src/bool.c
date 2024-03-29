@@ -1,9 +1,6 @@
 #include "../src/bool.h"
 #include "../src/calc.h"
 #include "../src/public.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
  
 Equation current_eq;
 
@@ -192,30 +189,30 @@ int calc_TT_line(int var_count, int var_values[], char* bool_exp) {
         return eval_exp(temp);
 }
 
-void print_truth_table(int var_count, int** truth_table) {
-    print_truth_header(var_count);
+void print_truth_table(int var_count, int **truth_table, FILE *stdio) {
+    print_truth_header(var_count, stdio);
     for (int i = 0; i < pow(2, var_count); i++) {
         for (int j = 0; j < var_count + 1; j++) 
-            printf("%i\t", truth_table[i][j]);
-        printf("\n");
+            fprintf(stdio, "%i\t", truth_table[i][j]);
+        fprintf(stdio, "\n");
     }
 }
 
-void print_truth_line(int line, int last_column_index, int** truth_table) {
+void print_truth_line(int line, int last_column_index, int **truth_table, FILE *stdio) {
     for (int i = 0; i < last_column_index + 1; i++)
-        printf("%i\t", truth_table[line][i]);
+        fprintf(stdio, "%i\t", truth_table[line][i]);
 }
 
-void print_truth_header(int var_count) {
-    int var_char = a_ascii;
-    printf("\n");
+void print_truth_header(int var_count, FILE *stdio) {
+    int var_char = 'A';
+    fprintf(stdio, "\n");
     for (int i = 0; i < var_count + 1; i++)
         if (i == var_count)
-            printf("%c\n", s_ascii);
+            fprintf(stdio, "%c\n", 'S');
         else
-            printf("%c\t", var_char++);
+            fprintf(stdio, "%c\t", var_char++);
 }
 
-void print_bool_exp(char* bool_exp) {
-    printf("\nS = %s\n", bool_exp);
+void print_bool_exp(char *bool_exp, FILE *stdio) {
+    fprintf(stdio, "\nS = %s\n", bool_exp);
 }

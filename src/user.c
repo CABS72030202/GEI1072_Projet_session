@@ -39,11 +39,11 @@ void option_menu() {
     int input = menu_selection(choices, sizeof(choices) / 8);
     switch (input) {
         case 1:     // Print truth table
-        print_truth_table(current_eq.var_count, current_eq.truth_table);
+        print_truth_table(current_eq.var_count, current_eq.truth_table, stdout);
         break;
 
         case 2:     // Print boolean expression
-        print_bool_exp(current_eq.bool_exp);
+        print_bool_exp(current_eq.bool_exp, stdout);
         break;
 
         case 3:     // Define default boolean expression type (SOP or POS)
@@ -81,8 +81,8 @@ void input_truth_table(int var_count) {
         truth_table[i] = (int*)malloc((var_count + 1) * sizeof(int));
         for (int j = 0; j < var_count + 1; j++)
             if(j == var_count) {
-                print_truth_header(var_count);
-                print_truth_line(i, var_count - 1, truth_table);
+                print_truth_header(var_count, stdout);
+                print_truth_line(i, var_count - 1, truth_table, stdout);
                 truth_table[i][j] = valid_integer_input(0, 1);
             }
             else

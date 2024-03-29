@@ -13,7 +13,7 @@ int count_files();                              // Function counting the number 
 char* change_file_name(char*);                  // Function letting the user change the default text file name for execution duration
 char* change_repo(char*);                       // Function letting the user change the default repo for generated text file for execution duration
 void save_equation(Equation*);                  // Function used to save a boolean equation in a text file
-char* generate_file_name();                     // Function that automatically generates a .txt file name by concatenating the curr_file_name and curr_file_count
-int valid_file_name(char*);                     // Function that checks the unicity of a generated file name in the current repository
+char* generate_file_path();                     // Function that automatically generates a .txt file name by concatenating the curr_file_name and curr_file_count
+int valid_file_path(char*);                     // Function that checks the unicity of a generated file name in the current repository
 
 #endif
