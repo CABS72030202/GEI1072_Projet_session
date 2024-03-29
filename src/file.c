@@ -48,6 +48,7 @@ char* change_repo(char* new_name) {
 
 void save_equation(Equation* eq) {
     char* file_name = generate_file_name();
+    printf("\ntest : %s\n", file_name);
 }
 
 char* generate_file_name() {
@@ -65,12 +66,21 @@ char* generate_file_name() {
         new_file_name[new_size - i] = (char)(j % 10) + 48;
         j /= 10;
     }
-    if(!valid_file_name(new_file_name))
+    char* file_name = (char*)malloc(sizeof(char) * (strlen(new_file_name) + 4));
+    sprintf(file_name, "%s%s", new_file_name, ".txt");
+    if(!valid_file_name(file_name))
         new_file_name = generate_file_name();
-    else
-        return new_file_name;
+    else 
+        return file_name;
 }
 
 int valid_file_name(char* file_name) {
-    return 1;
+    FILE *file;
+    char* file_path = (char*)malloc(sizeof(char) * (strlen(file_name) + strlen(curr_repo)));
+    sprintf(file_path, "%s/%s", curr_repo, file_name);  // Construct file path
+    if ((file = fopen(file_path, "r")) != NULL) {       // Try to open the file
+        fclose(file);
+        return 0;                                       // File already exists
+    }
+    return 1;                                           // File doesn't exist
 }
