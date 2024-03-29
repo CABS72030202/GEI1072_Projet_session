@@ -32,7 +32,8 @@ void option_menu() {
             "Afficher l'expression actuelle", 
             "Définir le type d'affichage des expressions booléennes par défaut",
             "Déterminer une équation simplifiée équivalente", 
-            "Sauvegarder l'équation dans un fichier texte", 
+            "Sauvegarder l'équation dans un fichier texte",
+            "Options de sauvegarde", 
             "Saisir une nouvelle équation booléenne", 
             "Quitter le programme"};
     int input = menu_selection(choices, sizeof(choices) / 8);
@@ -40,24 +41,34 @@ void option_menu() {
         case 1:     // Print truth table
         print_truth_table(current_eq.var_count, current_eq.truth_table);
         break;
+
         case 2:     // Print boolean expression
         print_bool_exp(current_eq.bool_exp);
         break;
+
         case 3:     // Define default boolean expression type (SOP or POS)
         input_bool_exp_type();
         break;
+
         case 4:     // Simplify boolean equation
         break;
+
         case 5:     // Save boolean equation in a text file
         save_equation(&current_eq);
         break;
-        case 6:     // Define new boolean equation
+
+        case 6:     // Save options
+        save_options();
+        break;
+
+        case 7:     // Define new boolean equation
         input_type_menu();
         break;
-        case 7:     // Close program
+
+        case 8:     // Close program
         printf("\nGoodbye!\n");
         exit(0);
-        break;
+
         default:
         exitError("optionMenu | user.c");
     }
@@ -87,7 +98,13 @@ void input_bool_exp(int var_count) {
     for (int i = 0; i < var_count; i++)
         printf("%c  ", a_ascii + i);
     printf("%c\n", s_ascii);
-    initialize_from_BE(var_count, valid_string_input(create_valid_chars(var_count)));
+    char* bool_exp;
+    char* valid_char = create_valid_chars(var_count);
+    do {
+    bool_exp = valid_string_input(valid_char);
+    bool_exp = format_BE(bool_exp, valid_char);
+    } while(bool_exp == NULL);
+    initialize_from_BE(var_count, bool_exp);
 }
 
 void input_bool_exp_type() {
@@ -96,6 +113,42 @@ void input_bool_exp_type() {
     default_bool_exp_type = menu_selection(choices, 2);
     free(current_eq.bool_exp);
     current_eq.bool_exp = convert_TT_to_BE(current_eq.var_count, current_eq.truth_table);
+}
+
+void save_options() {
+    char* choices[] = { "Afficher le nom des fichiers et le dossier actuel",
+                        "Changer le nom des fichiers .txt", 
+                        "Changer le dossier où sont sauvegarder les fichiers .txt", 
+                        "Retour au menu principal"};
+    printf("\n--- Veuillez choisir parmi les options suivantes ---\n");
+    int input = menu_selection(choices, 4);
+    switch (input) {
+        case 1:
+        printf("\nNom actuel :\t %s\nDossier actuel : %s\n",curr_file_name, curr_repo);
+        break;
+
+        case 2:     // Change text files name
+        printf("\nNom actuel : %s\nVeuillez saisir un nouveau nom.\n", curr_file_name);
+        char* new_str = valid_string_input("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 #!$&()_+=-;É.,~");
+        curr_file_name = change_file_name(new_str);
+        break;
+
+        case 3:     // Change text files repository
+        printf("\nNom actuel : %s\nVeuillez saisir un nouveau dossier.\n", curr_repo);
+        do {
+        char* new_str = valid_string_input("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 #!$&()_+=-;É.,~/");   
+        curr_repo = change_repo(new_str);
+        } while(curr_repo == NULL);
+        break;
+
+        case 4:     // Return to main menu
+        option_menu();
+        break;
+
+        default:
+        exitError("save_options | user.c");
+    }
+    save_options();
 }
 
 // General functions
@@ -133,7 +186,6 @@ char* valid_string_input(char valid_chars[]) {
     for (size_t i = 0; i < len; i++)
         result[i] = toupper(input[i]);
     result[len] = '\0';
-    result = format_BE(result, valid_chars);
     if (result != NULL)
         return result;
     else
