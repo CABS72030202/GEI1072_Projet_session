@@ -21,7 +21,7 @@ void input_type_menu() {
         input_bool_exp(var_count);
         break;
         default:
-        exitError("inputTypeMenu | user.c");
+        exit_error("input_type_menu | user.c");
     }
 }
 
@@ -31,9 +31,10 @@ void option_menu() {
             "Afficher la table de vérité", 
             "Afficher l'expression actuelle", 
             "Définir le type d'affichage des expressions booléennes par défaut",
-            "Déterminer une équation simplifiée équivalente", 
+            "Déterminer une équation simplifiée équivalente",
+            "Charger l'équation d'un fichier texte", 
             "Sauvegarder l'équation dans un fichier texte",
-            "Options de sauvegarde", 
+            "Options pour la gestion de fichiers", 
             "Saisir une nouvelle équation booléenne", 
             "Quitter le programme"};
     int input = menu_selection(choices, sizeof(choices) / 8);
@@ -50,27 +51,31 @@ void option_menu() {
         input_bool_exp_type();
         break;
 
-        case 4:     // Simplify boolean equation
+        case 4:     // Simplify boolean expression
+        load_menu();
         break;
 
-        case 5:     // Save boolean equation in a text file
-        save_equation(&current_eq);
+        case 5:     // Load boolean equation from a text file
         break;
 
-        case 6:     // Save options
-        save_options();
+        case 6:     // Save boolean equation in a text file
+        save_menu();
         break;
 
-        case 7:     // Define new boolean equation
+        case 7:     // Text file options
+        file_options();
+        break;
+
+        case 8:     // Define new boolean equation
         input_type_menu();
         break;
 
-        case 8:     // Close program
+        case 9:     // Close program
         printf("\nGoodbye!\n");
         exit(0);
 
         default:
-        exitError("optionMenu | user.c");
+        exit_error("option_menu | user.c");
     }
     option_menu();
 }
@@ -115,7 +120,51 @@ void input_bool_exp_type() {
     current_eq.bool_exp = convert_TT_to_BE(current_eq.var_count, current_eq.truth_table);
 }
 
-void save_options() {
+void load_menu() {
+
+}
+
+void save_menu() {
+    printf("\n--- Veuillez choisir une option de sauvegarde parmi les suivantes ---\n");
+    char* choices[] = {
+            "Générer un nouveau fichier",
+            "Écraser les données d\'un fichier existant",
+            "Ajouter les données à un fichier existant", 
+            "Retourner au menu principal"};
+    char* file_path, mode;
+    int input = menu_selection(choices, sizeof(choices) / 8);
+    switch (input) {
+        case 1:     // Generate a new text file
+        save_equation(&current_eq, generate_file_path(), "w");
+        break;
+
+        case 2:     // Overwrite a selected text file
+        save_equation(&current_eq, choose_file_path(), "w");
+        break;
+
+        case 3:     // Append to a selected text file
+        save_equation(&current_eq, choose_file_path(), "a");
+        break;
+
+        case 4:     // Return to main menu
+        option_menu();
+
+        default:
+        exit_error("save_menu | user.c");
+    }
+    option_menu();
+}
+
+char* choose_file_path() {
+    printf("\n--- Veuillez choisir un fichier parmi les suivants ---\n");
+    int file_count = count_files();
+    char* files[file_count];
+    generate_file_array(&files);
+    int input = menu_selection(files, file_count);
+    return files[input - 1];
+}
+
+void file_options() {
     char* choices[] = { "Afficher le nom des fichiers et le dossier actuel",
                         "Changer le nom des fichiers .txt", 
                         "Changer le dossier où sont sauvegarder les fichiers .txt", 
@@ -146,9 +195,9 @@ void save_options() {
         break;
 
         default:
-        exitError("save_options | user.c");
+        exit_error("save_options | user.c");
     }
-    save_options();
+    file_options();
 }
 
 // General functions
@@ -196,7 +245,7 @@ char* create_valid_chars(int var_count) {
     int total_size = strlen(valid_char_operators) + var_count + 2;
     char* valid_chars = (char*)malloc(total_size * sizeof(char));
     if (valid_chars == NULL)                        // Handle memory allocation error
-        exitError("create_valid_chars | user.c");
+        exit_error("create_valid_chars | user.c");
     strcpy(valid_chars, valid_char_operators);
     valid_chars[strlen(valid_char_operators)] = 'S';
     for (int i = 0; i < var_count; i++) 

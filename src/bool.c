@@ -55,7 +55,7 @@ char* convert_TT_to_BE(int var_count, int** truth_table) {
         return product_of_sums(var_count, truth_table);
         break;
         default:
-        exitError("Undefined default_bool_exp_type | convert_TT_to_BE | bool.c");
+        exit_error("Undefined default_bool_exp_type | convert_TT_to_BE | bool.c");
     }
 }
 
@@ -157,7 +157,7 @@ int required_size(int var_count, int** truth_table, char* exp_type) {
                 }
         break;
         default:
-        exitError("Please specify valid boolean expression type | required_size | bool.c");
+        exit_error("Please specify valid boolean expression type | required_size | bool.c");
     }
     return size;        
 }
@@ -177,7 +177,7 @@ int** convert_BE_to_TT(int var_count, char* bool_exp) {
 
 int calc_TT_line(int var_count, int var_values[], char* bool_exp) {
     if (strlen(bool_exp) > 100)
-        exitError("Exceeded allocated memory | calc_TT_line | bool.c");
+        exit_error("Exceeded allocated memory | calc_TT_line | bool.c");
     char temp[100];
     int index = 0;
     for (int i = 0; bool_exp[i] != '\0'; i++) 

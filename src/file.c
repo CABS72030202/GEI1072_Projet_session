@@ -21,7 +21,7 @@ int count_files() {
         closedir(dir);
     } else {
         perror("opendir");
-        exitError("count_files | file.c");
+        exit_error("count_files | file.c");
     }
     return count;
 }
@@ -46,14 +46,14 @@ char* change_repo(char* new_name) {
     return curr_repo;
 }
 
-void save_equation(Equation* eq) {
+void save_equation(Equation* eq, char* file_path, char* mode) {
     FILE *file;
-    char* file_path = generate_file_path();
-    if ((file = fopen(file_path, "w")) == NULL) 
-        exitError("save_equation | file.c");
+    if ((file = fopen(file_path, mode)) == NULL) 
+        exit_error("save_equation | file.c");
     print_bool_exp(eq->bool_exp, file);
     print_truth_table(eq->var_count, eq->truth_table, file);
     fclose(file);
+    printf("\nSauvegarde de l'équation S=%s dans le répertoire %s réussie.\n", eq->bool_exp, file_path);
 }
 
 char* generate_file_path() {
@@ -77,6 +77,27 @@ char* generate_file_path() {
         new_file_name = generate_file_path();
     else 
         return file_path;
+}
+
+void generate_file_array(char** files) {
+    DIR *dir;
+    struct dirent *entry;
+    int file_count = count_files(), i = 0;
+    dir = opendir(curr_repo);
+    if (dir == NULL) 
+        exit_error("generate_file_array (opendir error) | file.c");
+    while ((entry = readdir(dir)) != NULL)
+        if (entry->d_type == DT_REG) {
+            char *dot = strrchr(entry->d_name, '.');
+            if (dot && !strcmp(dot, ".txt")) {
+                files[i] = (char*)malloc(strlen(entry->d_name) + strlen(curr_repo) + 1);
+                if (files[i] == NULL)
+                    exit_error("generate_file_array (allocation error) | file.c");
+                sprintf(files[i], "%s%s", curr_repo, entry->d_name);
+                i++;
+            }
+        }
+    closedir(dir);
 }
 
 int valid_file_path(char* file_path) {

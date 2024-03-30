@@ -7,7 +7,7 @@ const char valid_char_operators[7] = {'+', '\'', '.', '(', ')', '@', ' '};
 const int a_ascii = 65;
 const int s_ascii = 83;
 
-void exitError(char* error) {
+void exit_error(char* error) {
     printf("\n\n\nERROR OCCURED HERE : \"%s\". END OF PROGRAM.\n\n\n", error);
     exit(1);
 }

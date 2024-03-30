@@ -8,7 +8,7 @@ char* preprocess_exp(char* expr) {
     // Allocate memory for the processed expression
     char* processed = (char*)malloc(2 * strlen(expr) * sizeof(char));
     if (processed == NULL) 
-        exitError("preprocess_exp | calc.c");
+        exit_error("preprocess_exp | calc.c");
 
     int index = 0;  // Index to track the position in the processed expression
     int pos = 1;    // Index to track the relative position when analysing further in the expression

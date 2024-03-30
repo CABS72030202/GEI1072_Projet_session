@@ -13,7 +13,10 @@ void option_menu();                         // Menu letting the user choose what
 void input_truth_table(int);                // Menu letting the user define the boolean equation with a truth table
 void input_bool_exp(int);                   // Menu letting the user define the boolean equation with an expression
 void input_bool_exp_type();                 // Menu letting the user define the default type of boolean expressions (SOP or POS) 
-void save_options();                        // Menu letting the user define text file options
+void load_menu();                           // Menu allowing the user to load a file from the default repository
+void save_menu();                           // Menu allowing the user to choose how to save a boolean expression
+char* choose_file_path();                   // Menu showing the user all the current file names in the default repository for him to choose from
+void file_options();                        // Menu letting the user define text file options
 
 // Generic functions
 int menu_selection(char*[], int);           // Prints formatted menu choices defined in a string array and prompts the user

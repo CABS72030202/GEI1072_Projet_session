@@ -29,8 +29,8 @@
 *.dylib
 
 # Executables
-*./main
-*./test_unit
+*.main
+*.test_unit
 *.exe
 *.out
 *.app
