@@ -46,6 +46,10 @@ E:  // Formatting error
     return NULL;
 }
 
+int count_var_from_BE(char* bool_exp) {
+    return 2;
+}
+
 char* convert_TT_to_BE(int var_count, int** truth_table) {
     switch(default_bool_exp_type) {
         case 1:

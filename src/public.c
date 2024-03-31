@@ -12,7 +12,7 @@ void exit_error(char* error) {
     exit(1);
 }
 
-char* delete_char(char old_str[], char delete) {
+char* delete_char(char* old_str, char delete) {
     int old_size, new_size = 0;
     for (old_size = 1; old_str[old_size - 1] != '\0'; old_size++)
         if (old_str[old_size - 1] == delete)
@@ -107,4 +107,17 @@ int is_char_valid(char c, char valid_chars[]) {
         if(valid_chars[i] == c) 
             return 1;
     return 0;
+}
+
+char* sub_str(int start_pos, int end_pos, char* str) {
+    int length = end_pos - start_pos;
+    char* sub = (char*)malloc((length + 1) * sizeof(char));     // Add 1 for the null terminator
+    if (sub == NULL) 
+        printf("Memory allocation failed\n");
+    else {
+        for (int i = 0; i < length; i++) 
+            sub[i] = str[start_pos + i];
+        sub[length] = '\0';                                     // Null-terminate the substring
+    }
+    return sub;
 }

@@ -16,6 +16,7 @@ void input_bool_exp_type();                 // Menu letting the user define the 
 void load_menu();                           // Menu allowing the user to load a file from the default repository
 void save_menu();                           // Menu allowing the user to choose how to save a boolean expression
 char* choose_file_path();                   // Menu showing the user all the current file names in the default repository for him to choose from
+char* choose_bool_exp(char**, int);         // Menu showing the user all the boolean expressions found in a chosen file for him to choose from
 void file_options();                        // Menu letting the user define text file options
 
 // Generic functions

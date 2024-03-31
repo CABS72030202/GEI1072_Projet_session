@@ -9,17 +9,27 @@
 // Specific functions
 void input_type_menu() {
     printf("\n--- Veuillez choisir un type de saisie parmi les suivants ---\n");
-    char* choices[] = {"Table de vérité", "Expression booléenne"};
-    int input = menu_selection(choices, 2);
-    printf("\n--- Veuillez saisir le nombre de variables booléennes à représenter (max. %i) ---\n", max_vars_count);
-    int var_count = valid_integer_input(2, max_vars_count);
+    char* choices[] = {"Table de vérité", "Expression booléenne", "Fichier texte"};
+    int input = menu_selection(choices, 3);
     switch(input) {
-        case 1:     // Truth table
-        input_truth_table(var_count);
+        case 1:
+        case 2:
+            printf("\n--- Veuillez saisir le nombre de variables booléennes à représenter (max. %i) ---\n", max_vars_count);
+            int var_count = valid_integer_input(2, max_vars_count);
+            switch(input) {
+            case 1:     // Truth table
+            input_truth_table(var_count);
+            break;
+            case 2:     // Boolean expression
+            input_bool_exp(var_count);
+            break;
+            }
         break;
-        case 2:     // Boolean expression
-        input_bool_exp(var_count);
+        
+        case 3:     // Load from text file
+            load_menu();
         break;
+
         default:
         exit_error("input_type_menu | user.c");
     }
@@ -121,7 +131,7 @@ void input_bool_exp_type() {
 }
 
 void load_menu() {
-
+    load_equation(choose_file_path(), "r");
 }
 
 void save_menu() {
@@ -131,7 +141,6 @@ void save_menu() {
             "Écraser les données d\'un fichier existant",
             "Ajouter les données à un fichier existant", 
             "Retourner au menu principal"};
-    char* file_path, mode;
     int input = menu_selection(choices, sizeof(choices) / 8);
     switch (input) {
         case 1:     // Generate a new text file
@@ -157,11 +166,17 @@ void save_menu() {
 
 char* choose_file_path() {
     printf("\n--- Veuillez choisir un fichier parmi les suivants ---\n");
-    int file_count = count_files();
+    int file_count = count_files_in_repo();
     char* files[file_count];
     generate_file_array(&files);
     int input = menu_selection(files, file_count);
     return files[input - 1];
+}
+
+char* choose_bool_exp(char** eq_array, int eq_count) {
+    printf("\n--- Veuillez choisir une expression parmi les suivantes ---\n");
+    int input = menu_selection(eq_array, eq_count);
+    return eq_array[input - 1];
 }
 
 void file_options() {

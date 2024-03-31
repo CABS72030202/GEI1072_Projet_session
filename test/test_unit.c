@@ -1,10 +1,6 @@
 #include "../lib/acutest.h"
 #include<stdio.h>
 #include "../test/test_unit.h"
-#include "../src/public.h"
-#include "../src/bool.h"
-#include "../src/karnaugh.h"
-#include "../src/calc.h"
 
 const int ignore_check_format_BE = 0;
 void check_format_BE(void) { if(!ignore_check_format_BE) {
@@ -161,6 +157,46 @@ void check_required_size(void) { if(!ignore_check_required_size) {
 } else {printf("Ignored test ");}
 }
 
+const int ignore_check_generate_file_array = 1;
+void check_generate_file_array(void) { if(!ignore_check_generate_file_array) {
+    // Manually define an array containing all the file paths in the default repository
+    int file_count = 2;
+    char* array1[] = {  "./generated/boolean_equation_1.txt",
+                        "./generated/boolean_equation_2.txt"}; 
+    char* array2[file_count]; 
+    generate_file_array(&array2);
+    for(int i = 0; i < file_count; i++)
+        TEST_CHECK(strcmp(array2[i], array1[i]) == 0);               
+} else {printf("Ignored test ");}
+}
+
+const int ignore_check_generate_eq_array = 0;
+void check_generate_eq_array(void) { if(!ignore_check_generate_eq_array) {
+    // Manually define the resulting array containing the separated strings
+    int eq_count = 2;
+    char* str = "=A+B=AB'C";
+    char* result[] = {  "A+B",
+                        "AB'C"};
+    char* array[eq_count];
+    generate_eq_array(&array, str);
+    for(int i = 0; i < eq_count; i++) {
+        TEST_CHECK(strcmp(array[i], result[i]) == 0);   
+        printf("\narray[i]=%s\tresult[i]=%s\n",array[i], result[i]);
+    }
+} else {printf("Ignored test ");}
+}
+
+const int ignore_check_sub_str = 0;
+void check_sub_str(void) { if(!ignore_check_sub_str) {
+    TEST_CHECK(strcmp(sub_str(14, 18, "first sub_str test"), "test") == 0);
+    TEST_CHECK(strcmp(sub_str(0, 5, "Hello World"), "Hello") == 0);
+    TEST_CHECK(strcmp(sub_str(6, 11, "Hello World"), "World") == 0);
+    TEST_CHECK(strcmp(sub_str(0, 4, "OpenAI"), "Open") == 0);
+    TEST_CHECK(strcmp(sub_str(3, 6, "OpenAI"), "nAI") == 0);
+    TEST_CHECK(strcmp(sub_str(1, 4, "Computer"), "omp") == 0);
+} else {printf("Ignored test ");}
+}
+
 TEST_LIST = {
     {"check_format_BE", check_format_BE},
     {"check_delete_char", check_delete_char},
@@ -170,5 +206,8 @@ TEST_LIST = {
     {"check_calc_TT_line", check_calc_TT_line},
     {"check_eval_exp", check_eval_exp},
     {"check_required_size", check_required_size},
+    {"check_generate_file_array", check_generate_file_array},
+    {"check_generate_eq_array", check_generate_eq_array},
+    {"check_sub_str", check_sub_str},
     {0}
 };

@@ -1,9 +1,7 @@
 #ifndef TEST_H
 #define TEST_H
 
-extern const int ignore_check_format_BE;
-void check_format_BE(void);
-
+#include "../src/public.h"
 extern const int ignore_check_delete_char;
 void check_delete_char(void);
 
@@ -13,16 +11,38 @@ void check_replace_char(void);
 extern const int ignore_check_is_string_valid;
 void check_is_string_valid(void);
 
-extern const int ignore_check_boolean_operations;
-void check_boolean_operations(void);
+extern const int ignore_check_sub_str;
+void check_sub_str(void);
+
+
+#include "../src/bool.h"
+extern const int ignore_check_format_BE;
+void check_format_BE(void);
+
+extern const int ignore_check_required_size;
+void check_required_size(void);
 
 extern const int ignore_check_calc_TT_line;
 void check_calc_TT_line(void);
 
+
+#include "../src/karnaugh.h"
+
+
+#include "../src/calc.h"
 extern const int ignore_check_eval_exp;
 void check_eval_exp(void);
 
-extern const int ignore_check_required_size;
-void check_required_size(void);
+extern const int ignore_check_boolean_operations;
+void check_boolean_operations(void);
+
+
+#include "../src/file.h"
+extern const int ignore_check_generate_file_array;
+void check_generate_file_array(void);
+
+extern const int ignore_check_generate_eq_array;
+void check_generate_eq_array(void);
+
 
 #endif

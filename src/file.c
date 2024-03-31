@@ -10,7 +10,7 @@ char* curr_repo = "./generated/";
 char* curr_file_name = "boolean_equation_";
 int curr_file_count = 0;
 
-int count_files() {
+int count_files_in_repo() {
     DIR *dir;
     struct dirent *entry;
     int count = 0;
@@ -42,7 +42,7 @@ char* change_repo(char* new_name) {
         printf("\nRépertoire introuvable. Veuillez réessayer.\n");
         return NULL;
     }
-    count_files();
+    count_files_in_repo();
     return curr_repo;
 }
 
@@ -54,6 +54,47 @@ void save_equation(Equation* eq, char* file_path, char* mode) {
     print_truth_table(eq->var_count, eq->truth_table, file);
     fclose(file);
     printf("\nSauvegarde de l'équation S=%s dans le répertoire %s réussie.\n", eq->bool_exp, file_path);
+}
+
+void load_equation(char* file_path, char* mode) {
+    const int ALLOC_SIZE = 8;
+    FILE *file = fopen(file_path, mode);
+    if (file == NULL) 
+        exit_error("load_equation (fopen error) | file.c");
+    char* result = (char*)malloc(ALLOC_SIZE * sizeof(char));
+    char curr_char;
+    int eq_count = 0, char_count = 0;
+    while (curr_char != EOF) {
+        curr_char = fgetc(file);
+        if(curr_char == s_ascii) {
+            eq_count++;
+            while(curr_char != '\n') {
+                curr_char = fgetc(file);
+                result[char_count++] = curr_char;
+                if (char_count % ALLOC_SIZE == 0)
+                    result = (char*)realloc(result, ((char_count / ALLOC_SIZE) * ALLOC_SIZE) * sizeof(char));
+            }
+        }
+    }
+    fclose(file);
+    result[char_count++] = '\0';
+    result = delete_char(result, ' ');
+    result = delete_char(result, '\n');
+    char_count = strlen(result);
+    eq_count /= 2;
+
+
+    if (result != NULL) {
+        printf("Concatenated lines starting with 'S':\n%s\nFinal size:%i\nEq_count:%i\n", result, char_count, eq_count);
+    } else
+        printf("No lines starting with 'S' found.\n");
+    
+
+    char* eq_array[eq_count];
+    /*generate_eq_array(&eq_array, result);
+    char* bool_exp = choose_bool_exp(&eq_array, eq_count);
+    initialize_from_BE(count_var_from_BE(bool_exp), bool_exp);*/
+    free(result);
 }
 
 char* generate_file_path() {
@@ -82,7 +123,7 @@ char* generate_file_path() {
 void generate_file_array(char** files) {
     DIR *dir;
     struct dirent *entry;
-    int file_count = count_files(), i = 0;
+    int file_count = count_files_in_repo(), i = 0;
     dir = opendir(curr_repo);
     if (dir == NULL) 
         exit_error("generate_file_array (opendir error) | file.c");
@@ -98,6 +139,10 @@ void generate_file_array(char** files) {
             }
         }
     closedir(dir);
+}
+
+void generate_eq_array(char** eq_array, char* eq_str) {
+    
 }
 
 int valid_file_path(char* file_path) {

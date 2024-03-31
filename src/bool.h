@@ -21,6 +21,7 @@ extern Equation current_eq;                     // Global variable that stocks t
 void initialize_from_TT(int, int**);            // Initialize every attributes of the global variable "current_eq" knowing the truth table
 void initialize_from_BE(int, char*);            // Initialize every attributes of the global variable "current_eq" knowing the boolean expression
 char* format_BE(char*, char[]);                 // Formats the boolean expression by removing unecessary characters and adding required ones 
+int count_var_from_BE(char*);                   // Counts the number of variables corresponding from a boolean expression
 char* convert_TT_to_BE(int, int**);             // Define the boolean expression of an equation with the associated truth table
 char* sum_of_products(int, int**);
 char* product_of_sums(int, int**);
