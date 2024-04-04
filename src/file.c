@@ -66,7 +66,7 @@ void load_equation(char* file_path, char* mode) {
                 curr_char = fgetc(file);
                 result[char_count++] = curr_char;
                 if (char_count % ALLOC_SIZE == 0)
-                    result = (char*)realloc(result, ((char_count / ALLOC_SIZE) * ALLOC_SIZE) * sizeof(char));
+                    result = (char*)realloc(result, (char_count + ALLOC_SIZE) * sizeof(char));
             }
         }
     }

@@ -224,6 +224,20 @@ void check_count_var_from_BE(void) { if(!ignore_check_count_var_from_BE) {
 } else {printf("Ignored test ");}
 }
 
+const int ignore_check_simplify_eq = 0;
+void check_simplify_eq(void) { if(!ignore_check_count_var_from_BE) {
+    initialize_from_BE(1, "A");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A") == 0);
+    initialize_from_BE(2, "A+B");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A+B") == 0);
+    initialize_from_BE(3, "A'B'C+ABC'+ABC");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "AB+A'B'C") == 0);
+    initialize_from_BE(4, "A'B'C'D'+A'B'CD+A'BC'D+AB'CD'+AB'CD+ABCD'+ABCD");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "AC+B'CD+A'BC'D+A'B'C'D'") == 0);
+
+} else {printf("Ignored test ");}
+}
+
 TEST_LIST = {
     {"format_BE", check_format_BE},
     {"delete_char", check_delete_char},
@@ -237,5 +251,6 @@ TEST_LIST = {
     {"generate_eq_array", check_generate_eq_array},
     {"sub_str", check_sub_str},
     {"count_var_from_BE", check_count_var_from_BE},
+    {"simplified_eq", check_simplify_eq},
     {0}
 };
