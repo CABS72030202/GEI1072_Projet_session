@@ -42,7 +42,6 @@ void option_menu() {
             "Afficher l'expression actuelle", 
             "Définir le type d'affichage des expressions booléennes par défaut",
             "Déterminer une équation simplifiée équivalente",
-            "Charger l'équation d'un fichier texte", 
             "Sauvegarder l'équation dans un fichier texte",
             "Options pour la gestion de fichiers", 
             "Saisir une nouvelle équation booléenne", 
@@ -65,22 +64,19 @@ void option_menu() {
         load_menu();
         break;
 
-        case 5:     // Load boolean equation from a text file
-        break;
-
-        case 6:     // Save boolean equation in a text file
+        case 5:     // Save boolean equation in a text file
         save_menu();
         break;
 
-        case 7:     // Text file options
+        case 6:     // Text file options
         file_options();
         break;
 
-        case 8:     // Define new boolean equation
+        case 7:     // Define new boolean equation
         input_type_menu();
         break;
 
-        case 9:     // Close program
+        case 8:     // Close program
         printf("\nGoodbye!\n");
         exit(0);
 
@@ -182,7 +178,7 @@ char* choose_bool_exp(char** eq_array, int eq_count) {
 void file_options() {
     char* choices[] = { "Afficher le nom des fichiers et le dossier actuel",
                         "Changer le nom des fichiers .txt", 
-                        "Changer le dossier où sont sauvegarder les fichiers .txt", 
+                        "Changer le dossier où sont sauvegardés les fichiers .txt", 
                         "Retour au menu principal"};
     printf("\n--- Veuillez choisir parmi les options suivantes ---\n");
     int input = menu_selection(choices, 4);
