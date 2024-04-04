@@ -33,7 +33,7 @@ calc.o: ./src/public.h ./src/public.c ./src/calc.h ./src/calc.c
 	$(CC) $(CFLAGS) -c ./src/calc.c -o calc.o $(CXXFLAGS)
 
 # Object generation from source and header for USER
-user.o: ./src/public.h ./src/public.c ./src/bool.h ./src/bool.c ./src/user.h ./src/user.c ./src/file.h ./src/file.c
+user.o: ./src/public.h ./src/public.c ./src/bool.h ./src/bool.c ./src/karnaugh.h ./src/karnaugh.c ./src/user.h ./src/user.c ./src/file.h ./src/file.c 
 	$(CC) $(CFLAGS) -c ./src/user.c -o user.o $(CXXFLAGS)
 
 # Object generation from source and header for KARNAUGH

@@ -45,7 +45,12 @@ E:  // Formatting error
 }
 
 int count_var_from_BE(char* bool_exp) {
-    return 2;
+    int var_count = 1;
+    for (int i = 0; i < strlen(bool_exp); i++)
+        if ((bool_exp[i] > a_ascii && bool_exp[i] < s_ascii)   // The current character is a valid variable letter
+            && bool_exp[i] > (a_ascii + var_count - 1))        // First occurence of this character
+                var_count = bool_exp[i] - a_ascii + 1;
+    return var_count;
 }
 
 char* convert_TT_to_BE(int var_count, int** truth_table) {

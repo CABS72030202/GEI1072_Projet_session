@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include <math.h>
 #include <ctype.h>
+#include <string.h>
 
 /* Default functions and variables accessible for all files */
 

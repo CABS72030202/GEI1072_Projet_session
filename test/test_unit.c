@@ -213,17 +213,29 @@ void check_sub_str(void) { if(!ignore_check_sub_str) {
 } else {printf("Ignored test ");}
 }
 
+const int ignore_check_count_var_from_BE = 0;
+void check_count_var_from_BE(void) { if(!ignore_check_count_var_from_BE) {
+    TEST_CHECK(count_var_from_BE("A+B+BC") == 3);
+    TEST_CHECK(count_var_from_BE("A'BC+AB'C+ABC'") == 3);
+    TEST_CHECK(count_var_from_BE("A+C+B'") == 3);
+    TEST_CHECK(count_var_from_BE("A@B") == 2);
+    TEST_CHECK(count_var_from_BE("(A'+B+C)(A+B'+C)'(A+B+C')") == 3);
+    TEST_CHECK(count_var_from_BE("A") == 1);
+} else {printf("Ignored test ");}
+}
+
 TEST_LIST = {
-    {"check_format_BE", check_format_BE},
-    {"check_delete_char", check_delete_char},
-    {"check_replace_char", check_replace_char},
-    {"check_is_string_valid", check_is_string_valid},
-    {"check_boolean_operations", check_boolean_operations},
-    {"check_calc_TT_line", check_calc_TT_line},
-    {"check_eval_exp", check_eval_exp},
-    {"check_required_size", check_required_size},
-    {"check_generate_file_array", check_generate_file_array},
-    {"check_generate_eq_array", check_generate_eq_array},
-    {"check_sub_str", check_sub_str},
+    {"format_BE", check_format_BE},
+    {"delete_char", check_delete_char},
+    {"replace_char", check_replace_char},
+    {"is_string_valid", check_is_string_valid},
+    {"boolean_operations", check_boolean_operations},
+    {"calc_TT_line", check_calc_TT_line},
+    {"eval_exp", check_eval_exp},
+    {"required_size", check_required_size},
+    {"generate_file_array", check_generate_file_array},
+    {"generate_eq_array", check_generate_eq_array},
+    {"sub_str", check_sub_str},
+    {"count_var_from_BE", check_count_var_from_BE},
     {0}
 };

@@ -3,6 +3,7 @@
 #include "../src/public.h"
 #include "../src/bool.h"
 #include "../src/file.h"
+#include "../src/karnaugh.h"
 
 /* Functions used to interact with the user :
     - Print selection menus

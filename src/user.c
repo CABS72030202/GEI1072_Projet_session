@@ -55,7 +55,7 @@ void option_menu() {
         break;
 
         case 4:     // Simplify boolean expression
-        load_menu();
+        simplify_eq(&current_eq);
         break;
 
         case 5:     // Save boolean equation in a text file
