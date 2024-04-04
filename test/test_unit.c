@@ -172,17 +172,35 @@ void check_generate_file_array(void) { if(!ignore_check_generate_file_array) {
 
 const int ignore_check_generate_eq_array = 0;
 void check_generate_eq_array(void) { if(!ignore_check_generate_eq_array) {
+
     // Manually define the resulting array containing the separated strings
-    int eq_count = 2;
-    char* str = "=A+B=AB'C";
-    char* result[] = {  "A+B",
+    char* str1 = "=A+B=AB'C";
+    char* result1[] = {  "A+B",
                         "AB'C"};
-    char* array[eq_count];
-    generate_eq_array(&array, str);
-    for(int i = 0; i < eq_count; i++) {
-        TEST_CHECK(strcmp(array[i], result[i]) == 0);   
-        printf("\narray[i]=%s\tresult[i]=%s\n",array[i], result[i]);
-    }
+    char* array1[2];
+    generate_eq_array(&array1, str1);
+    TEST_CHECK(strcmp(array1[0], result1[0]) == 0);   
+    TEST_CHECK(strcmp(array1[1], result1[1]) == 0);
+
+    // Manually define the resulting array containing the separated strings
+    char* str2 = "=A";
+    char* result2[] = {"A"};
+    char* array2[1];
+    generate_eq_array(&array2, str2);
+    TEST_CHECK(strcmp(array2[0], result2[0]) == 0);   
+
+    // Manually define the resulting array containing the separated strings
+    char* str3 = "=A+B+BC=A'BC+AB'C+ABC'=A.B.C=A@B=(A'+B+C)(A+B'+C)'(A+B+C')";
+    char* result3[] = { "A+B+BC",
+                        "A'BC+AB'C+ABC'",
+                        "A.B.C",
+                        "A@B",
+                        "(A'+B+C)(A+B'+C)'(A+B+C')"};
+    char* array3[5];
+    generate_eq_array(&array3, str3);
+    for (int i = 0; i < 5; i++)
+        TEST_CHECK(strcmp(array3[i], result3[i]) == 0);   
+
 } else {printf("Ignored test ");}
 }
 

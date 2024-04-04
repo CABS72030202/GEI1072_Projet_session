@@ -83,17 +83,10 @@ void load_equation(char* file_path, char* mode) {
     char_count = strlen(result);
     eq_count /= 2;
 
-
-    if (result != NULL) {
-        printf("Concatenated lines starting with 'S':\n%s\nFinal size:%i\nEq_count:%i\n", result, char_count, eq_count);
-    } else
-        printf("No lines starting with 'S' found.\n");
-    
-
     char* eq_array[eq_count];
-    /*generate_eq_array(&eq_array, result);
+    generate_eq_array(&eq_array, result);
     char* bool_exp = choose_bool_exp(&eq_array, eq_count);
-    initialize_from_BE(count_var_from_BE(bool_exp), bool_exp);*/
+    initialize_from_BE(count_var_from_BE(bool_exp), bool_exp);
     free(result);
 }
 
@@ -142,7 +135,17 @@ void generate_file_array(char** files) {
 }
 
 void generate_eq_array(char** eq_array, char* eq_str) {
-    
+    char* temp = delete_char(eq_str, '=');
+    int eq_count = strlen(eq_str) - strlen(temp);
+    int next_char = 2, prev_char = 1, curr_eq = 0;
+    while (next_char <= strlen(eq_str)) {
+        if (eq_str[next_char] == '=') {
+            eq_array[curr_eq++] = sub_str(prev_char, next_char, eq_str);
+            prev_char = next_char + 1;
+        }
+        next_char++;
+    }
+    eq_array[curr_eq] = sub_str(prev_char, next_char, eq_str);
 }
 
 int valid_file_path(char* file_path) {
