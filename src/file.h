@@ -1,5 +1,8 @@
 #ifndef FILE_H
 #define FILE_H
+#include "../src/public.h"
+#include "../src/bool.h"
+#include "../src/user.h"
 
 /*  Functions and variables used for
     text file management     

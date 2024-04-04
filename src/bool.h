@@ -1,8 +1,7 @@
 #ifndef BOOL_H
 #define BOOL_H
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include "../src/public.h"
+#include "../src/calc.h"
 
 /*  Functions used to define and manipulate
      all forms of a boolean expression  

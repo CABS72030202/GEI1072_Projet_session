@@ -1,10 +1,4 @@
-#include "../src/public.h"
-#include "../src/bool.h"
-#include "../src/file.h"
 #include "../src/user.h"
-#include <stdio.h>
-#include "math.h"
-#include <ctype.h>
  
 // Specific functions
 void input_type_menu() {

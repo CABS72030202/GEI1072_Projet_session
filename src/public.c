@@ -1,5 +1,4 @@
 #include "../src/public.h"
-#include <stdio.h>
 
 const int max_vars_count = 4;
 int default_bool_exp_type = 1;          // 1 = SOP (default), 2 = POS 

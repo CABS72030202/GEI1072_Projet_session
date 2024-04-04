@@ -1,5 +1,6 @@
 #ifndef CALC_H
 #define CALC_H
+#include "../src/public.h"
 
 /*  Stack-based calculator  */
 

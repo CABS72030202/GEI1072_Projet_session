@@ -1,5 +1,8 @@
 #ifndef USER_H
 #define USER_H
+#include "../src/public.h"
+#include "../src/bool.h"
+#include "../src/file.h"
 
 /* Functions used to interact with the user :
     - Print selection menus

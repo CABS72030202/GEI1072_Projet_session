@@ -1,6 +1,4 @@
 #include "../src/bool.h"
-#include "../src/calc.h"
-#include "../src/public.h"
  
 Equation current_eq;
 

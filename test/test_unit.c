@@ -1,5 +1,3 @@
-#include "../lib/acutest.h"
-#include<stdio.h>
 #include "../test/test_unit.h"
 
 const int ignore_check_format_BE = 0;

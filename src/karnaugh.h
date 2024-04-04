@@ -1,5 +1,7 @@
 #ifndef KARNAUGH_H
 #define KARNAUGH_H
+#include "../src/public.h"
+#include "../src/bool.h"
 
 /*  Functions used to simplify a boolean
     expression using a Karnaugh map 

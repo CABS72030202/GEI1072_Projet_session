@@ -1,10 +1,4 @@
-#include "../src/public.h"
-#include "../src/bool.h"
 #include "../src/file.h"
-#include "../src/user.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <dirent.h>
 
 char* curr_repo = "./generated/";
 char* curr_file_name = "boolean_equation_";

@@ -1,5 +1,8 @@
 #ifndef TEST_H
 #define TEST_H
+#include "../lib/acutest.h"
+#include <stdio.h>
+#include "../src/user.h"
 
 #include "../src/public.h"
 extern const int ignore_check_delete_char;

@@ -1,8 +1,4 @@
 #include "../src/calc.h"
-#include "../src/public.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
 
 char* preprocess_exp(char* expr) {
     // Allocate memory for the processed expression

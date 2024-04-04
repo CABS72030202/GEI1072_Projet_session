@@ -1,5 +1,10 @@
 #ifndef PUBLIC_H
 #define PUBLIC_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <math.h>
+#include <ctype.h>
 
 /* Default functions and variables accessible for all files */
 
