@@ -191,7 +191,7 @@ int* convert_term_to_line(int var_count, char* term) {
              term[i + 1] != '\'')                   // The next character is not '          
                 TT_line[curr_var] = 1; 
             curr_var++;
-        }      
+        }
     return TT_line;
 }
 

@@ -10,12 +10,12 @@ Equation simplified_eq(Equation* eq) {
 
 char* karnaugh_algorithm(Equation* eq) {
     int k_size[2] = {0,0}, i = 0, j = 0, p = 0;
-    int count = 0, is_first_row = 0, is_last_row = 0, is_first_col = 0, is_last_col = 0, full_line = 0;
+    int count = 0, is_first_row = 0, is_last_row = 0, is_first_col = 0, is_last_col = 0, full_line = 0, square = 0;
     int current_group = 1;
     calc_karnaugh_size(&k_size, eq->var_count);                                             // Rows = [0] | Columns = [1]
     int** k_map = generate_karnaugh_map(eq, k_size);
-    char* simp_exp = (char*)malloc(100);
-    Cell* cell = (Cell*)malloc(10 * sizeof(Cell));
+    char* simp_exp;
+    Cell* cell = (Cell*)malloc(sizeof(Cell));
     cell->cell_exp = NULL;
     cell->group_id = -1;
     cell->next = NULL;
@@ -47,7 +47,7 @@ char* karnaugh_algorithm(Equation* eq) {
                 if((!is_first_col && (k_map[i][j - 1] == 1 || k_map[i][j - 1] == -1)) ||
                     (is_first_col && (k_map[i][k_size[1] - 1] == 1 || k_map[i][k_size[1] - 1] == -1)))
                     count++;
-count = 1;
+    switch_count:
                 switch(count) {
                     case 0:         // Group of 1
                     add_back(cell, get_cell_exp(eq->var_count, i, j), current_group);
@@ -60,7 +60,7 @@ count = 1;
                             break;
                         full_line++;
                     }
-                    if(full_line == k_size[0] - 1) {    // Vertical full line
+                    if(full_line == k_size[0]) {    // Vertical full line
                         for(p = 0; p < k_size[0]; p++) {
                             add_back(cell, get_cell_exp(eq->var_count, p, j), current_group);
                             k_map[p][j] = -1;
@@ -72,7 +72,7 @@ count = 1;
                             break;
                         full_line++;
                     }
-                    if(full_line == k_size[1] - 1) {    // Horizontal full line
+                    if(full_line == k_size[1]) {    // Horizontal full line
                         for(p = 0; p < k_size[1]; p++) {
                             add_back(cell, get_cell_exp(eq->var_count, i, p), current_group);
                             k_map[i][p] = -1;
@@ -124,6 +124,14 @@ count = 1;
                     case 2:         // Potential square group
                     case 3:
                     case 4:
+
+                    
+
+                        if(1) {     // Group is a line
+                            count = 1;
+                            goto switch_count;
+                        }
+                        
                     break;
 
                     default:
@@ -140,12 +148,18 @@ count = 1;
     pop_front(&cell);
 
     // Simplification
-    simp_exp = simplify_list(cell, group_count, eq->var_count);
+    simp_exp = simplify_list(cell, group_count, eq);
 
     // Free linked list
     while(cell != NULL)
         pop_front(&cell);
     free(cell);
+
+
+
+print_bool_exp(simp_exp, stdout);
+
+
 
     if(simp_exp == NULL)
         return eq->bool_exp;
@@ -153,46 +167,40 @@ count = 1;
         return simp_exp;
 }
 
-char* simplify_list(Cell* list, int group_count, int var_count) {
+char* simplify_list(Cell* list, int group_count, Equation* eq) {
     if(group_count == 0)
         return NULL;
     int current_group = 1, i = 0, j = 0, l = 0;
     Cell* current = list;
-    int** group_TT = (int*)malloc(pow(2, var_count) * sizeof(int*));
+    int** group_TT = (int*)malloc(pow(2, eq->var_count) * sizeof(int*));
     char temp[3];
-    char* simp_exp = (char*)malloc(100);
+    char* simp_exp = (char*)malloc(required_size(eq->var_count, eq->truth_table, "SOP") * sizeof(char));      // Max size is current string size
+    simp_exp[0] = '\0';
     while(current_group <= group_count) {
         // Build group truth table
         while(current->group_id == current_group) {
-            group_TT[l++] = convert_term_to_line(var_count, current->cell_exp);
+            group_TT[l++] = convert_term_to_line(eq->var_count, current->cell_exp);
             if(current->next == NULL)
                 break;
             else
                 current = current->next;
         }
         // Simplify group
-        if(l == 1) {
-            strcat(simp_exp, current->cell_exp);                            // Single cell group
-            strcat(simp_exp, "+");
-        }
-        else {
-            for(j = 0; j < var_count; j++)
-                for(i = 1; i <= l; i++) {
-                    if(i == l)
-                        if(group_TT[0][j] == 0) {
-                            temp[0] = (char)(a_ascii + j);
-                            temp[1] = '\'';
-                            strcat(simp_exp, temp);
-                        }
-                        else {
-                            temp[0] = (char)(a_ascii + j);
-                            strcat(simp_exp, temp);
-                        }
-                    else if(group_TT[i - 1][j] != group_TT[i][j])
-                        break;                                             // Exit loop if a different value is found in current variable column
+        for(j = 0; j < eq->var_count; j++)
+            for(i = 1; i <= l; i++) {
+                if(i == l) {
+                    if(group_TT[i - 1][j] == 0) 
+                        temp[1] = '\'';
+                    else 
+                        temp[1] = '\0';
+                    
+                    temp[0] = (char)(a_ascii + j);
+                    strcat(simp_exp, temp);
                 }
-            strcat(simp_exp, "+");   
-        }
+                else if(group_TT[i - 1][j] != group_TT[i][j])
+                    break;                                             // Exit loop if a different value is found in current variable column
+            }
+        strcat(simp_exp, "+");   
 
         // Free allocated memory
         for(i = 0; i < l; i++)
@@ -226,6 +234,14 @@ int** generate_karnaugh_map(Equation* eq, int k_size[]) {
         for(j = 0; j < k_size[1]; j++) 
             k_map[i][j] = eq->truth_table[fill_order[s++]][eq->var_count];
     return k_map;
+}
+
+void print_k_map(int** k_map, int row, int col) {
+    for(int i = 0; i < row; i++) {
+        for(int j = 0; j < col; j++)
+        printf("%i\t", k_map[i][j]);
+    printf("\n");
+    }
 }
 
 void calc_karnaugh_size(int size[], int var_count) {
@@ -275,7 +291,7 @@ char* get_cell_exp(int var_count, int row, int col) {
         return var_state2[row][col];
 
         case 3:
-        char* var_state3[4][2] = {"A'B'C'","A'B'C","A'BC","A'BC'",
+        char* var_state3[2][4] = {"A'B'C'","A'B'C","A'BC","A'BC'",
                                 "AB'C'","AB'C","ABC","ABC'"};
         return var_state3[row][col];
 
