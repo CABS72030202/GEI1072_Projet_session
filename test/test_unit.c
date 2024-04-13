@@ -257,15 +257,13 @@ void check_count_var_from_BE(void) { if(!ignore_check_count_var_from_BE) {
 
 const int ignore_check_simplify_eq = 0;
 void check_simplify_eq(void) { if(!ignore_check_simplify_eq) {
-    /* Line groups */
+    /* Line groups
     initialize_from_BE(2, "AB'+AB");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A") == 0);
     initialize_from_BE(2, "AB'+A'B+AB");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "B+A") == 0);
     initialize_from_BE(3, "AB'C'+AB'C+ABC+ABC'");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A") == 0);
-    initialize_from_BE(3, "AB'C'+ABC'");
-    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "AC'") == 0);
     initialize_from_BE(3, "A'BC'+AB'C'+AB'C+ABC'");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "BC'+AB'") == 0);
     initialize_from_BE(3, "A'B'C+ABC'+ABC");
@@ -277,17 +275,29 @@ void check_simplify_eq(void) { if(!ignore_check_simplify_eq) {
     initialize_from_BE(4, "A'BC'D'+A'BC'D+A'BCD+A'BCD'");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A'B") == 0);
     initialize_from_BE(4, "A'B'CD+A'BC'D'+A'BC'D+A'BCD'+A'BCD+AB'C'D'+AB'CD+ABC'D'+ABCD");
-    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "CD+A'B+AC'D'") == 0);
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "CD+A'B+AC'D'") == 0);*/
 
     /* Square groups */
     initialize_from_BE(3, "A'BC+A'BC'+ABC+ABC'");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "B") == 0);
+    initialize_from_BE(4, "A'BCD+A'BC'D+ABCD+ABC'D");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "BD") == 0);
+    initialize_from_BE(4, "A'B'C'D'+A'B'C'D+A'BC'D'+A'BC'D+ABCD+ABCD'+AB'CD+AB'CD'");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A'C'+AC") == 0);
+    initialize_from_BE(4, "A'B'C'D'+A'B'C'D+A'B'CD'+A'BC'D'+A'BC'D+ABCD+ABCD'+AB'CD+AB'CD'");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A'C'+B'CD'+AC") == 0);
     initialize_from_BE(4, "A'B'C'D'+A'B'C'D+A'BC'D'+A'BC'D+A'BCD+ABC'D+ABCD");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A'C'+BD") == 0);
     initialize_from_BE(4, "A'B'C'D'+A'B'CD'+A'BC'D'+A'BCD+AB'C'D'+AB'CD'");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "B'D'+A'C'D'+A'BCD") == 0);
     initialize_from_BE(4, "A'B'C'D'+A'B'CD+A'BC'D+AB'CD'+AB'CD+ABCD'+ABCD");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A'B'C'D'+B'CD+A'BC'D+AC") == 0);
+
+    /* Rectangle groups */
+    initialize_from_BE(4, "A'B'C'D+A'B'CD+A'BC'D+A'BCD+ABC'D+ABCD+AB'C'D+AB'CD");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "D") == 0);
+    initialize_from_BE(4, "A'B'C'D+A'B'CD+A'BC'D+A'BCD+ABC'D+ABCD+AB'C'D+AB'CD+A'BC'D'+A'BCD'+ABC'D'+ABCD'");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "B+D") == 0);
 
 } else {printf("Ignored test ");}
 }

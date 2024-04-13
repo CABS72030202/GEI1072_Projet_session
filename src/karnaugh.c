@@ -10,7 +10,7 @@ Equation simplified_eq(Equation* eq) {
 
 char* karnaugh_algorithm(Equation* eq) {
     int k_size[2] = {0,0}, i = 0, j = 0, p = 0;
-    int count = 0, is_first_row = 0, is_last_row = 0, is_first_col = 0, is_last_col = 0, full_line = 0, square = 0;
+    int count = 0, full_line = 0, square = 0;
     int current_group = 1;
     calc_karnaugh_size(&k_size, eq->var_count);                                             // Rows = [0] | Columns = [1]
     int** k_map = generate_karnaugh_map(eq, k_size);
@@ -22,116 +22,145 @@ char* karnaugh_algorithm(Equation* eq) {
     for(i = 0; i < k_size[0]; i++) 
         for(j = 0; j < k_size[1]; j++)
             if(k_map[i][j] == 1) {
-                if(i == k_size[0] - 1)
-                    is_last_row = 1;
-                else if(i == 0)
-                    is_first_row = 1;
-                if(j == k_size[1] - 1)
-                    is_last_col = 1;
-                else if(j == 0)
-                    is_first_col = 1;
-                    
                 // Down
-                if((!is_last_row && (k_map[i + 1][j] == 1 || k_map[i + 1][j] == -1)) ||
-                    (is_last_row && (k_map[0][j] == 1 || k_map[0][j] == -1)))
+                if(k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 0)] == 1 || k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 0)] == -1)
                     count++;
                 // Right
-                if((!is_last_col && (k_map[i][j + 1] == 1 || k_map[i][j + 1] == -1)) ||
-                    (is_last_col && (k_map[i][k_size[1] + 1] == 1 || k_map[i][k_size[1] + 1] == -1)))
+                if(k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, 1)] == 1 || k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, 1)] == -1)
                     count++;
                 // Up
-                if((!is_first_row && (k_map[i - 1][j] == 1 || k_map[i - 1][j] == -1)) ||
-                    (is_first_row && (k_map[k_size[0] - 1][j] == 1 || k_map[k_size[0] - 1][j] == -1)))
+                if(k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 0)] == 1 || k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 0)] == -1)
                     count++;
                 // Left
-                if((!is_first_col && (k_map[i][j - 1] == 1 || k_map[i][j - 1] == -1)) ||
-                    (is_first_col && (k_map[i][k_size[1] - 1] == 1 || k_map[i][k_size[1] - 1] == -1)))
+                if(k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, -1)] == 1 || k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, -1)] == -1)
                     count++;
-    switch_count:
+    S:
                 switch(count) {
                     case 0:         // Group of 1
-                    add_back(cell, get_cell_exp(eq->var_count, i, j), current_group);
-                    k_map[i][j] = -1;
+                        add_back(cell, get_cell_exp(eq->var_count, i, j), current_group);
+                        k_map[i][j] = -1;
                     break;
 
                     case 1:         // Line group
-                    for(p = 0, full_line = 0; p < k_size[0]; p++) {
-                        if(k_map[p][j] == 0)
+                        for(p = 0, full_line = 0; p < k_size[0]; p++) {
+                            if(k_map[p][j] == 0)
+                                break;
+                            full_line++;
+                        }
+                        if(full_line == k_size[0]) {    // Vertical full line
+                            for(p = 0; p < k_size[0]; p++) {
+                                add_back(cell, get_cell_exp(eq->var_count, p, j), current_group);
+                                k_map[p][j] = -1;
+                            }
                             break;
-                        full_line++;
-                    }
-                    if(full_line == k_size[0]) {    // Vertical full line
-                        for(p = 0; p < k_size[0]; p++) {
-                            add_back(cell, get_cell_exp(eq->var_count, p, j), current_group);
-                            k_map[p][j] = -1;
                         }
-                        break;
-                    }
-                    for(p = 0, full_line = 0; p < k_size[1]; p++) {
-                        if(k_map[i][p] == 0)
+                        for(p = 0, full_line = 0; p < k_size[1]; p++) {
+                            if(k_map[i][p] == 0)
+                                break;
+                            full_line++;
+                        }
+                        if(full_line == k_size[1]) {    // Horizontal full line
+                            for(p = 0; p < k_size[1]; p++) {
+                                add_back(cell, get_cell_exp(eq->var_count, i, p), current_group);
+                                k_map[i][p] = -1;
+                            }
                             break;
-                        full_line++;
-                    }
-                    if(full_line == k_size[1]) {    // Horizontal full line
-                        for(p = 0; p < k_size[1]; p++) {
-                            add_back(cell, get_cell_exp(eq->var_count, i, p), current_group);
-                            k_map[i][p] = -1;
                         }
-                        break;
-                    }
-                    else {                              // Group of 2
-                        add_back(cell, get_cell_exp(eq->var_count, i, j), current_group);
-                        k_map[i][j] = -1;
-                        // Down
-                        if(!is_last_row && (k_map[i + 1][j] == 1 || k_map[i + 1][j] == -1)) {
-                            add_back(cell, get_cell_exp(eq->var_count, i + 1, j), current_group);
-                            k_map[i + 1][j] = -1;
+                        else {                              // Group of 2
+                            add_back(cell, get_cell_exp(eq->var_count, i, j), current_group);
+                            k_map[i][j] = -1;
+                            // Down
+                            if(k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 0)] == 1 || k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 0)] == -1) {
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 1), relative_pos(k_size[1], j, 0)), current_group);
+                                k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 0)] = -1;
+                            }
+                            // Right
+                            else if(k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, 1)] == 1 || k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, 1)] == -1) {
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 0), relative_pos(k_size[1], j, 1)), current_group);
+                                k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, 1)] = -1;                       
+                            }
+                            // Up
+                            else if(k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 0)] == 1 || k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 0)] == -1) {
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, -1), relative_pos(k_size[1], j, 0)), current_group);
+                                k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 0)] = -1;                        
+                            }
+                            // Left
+                            else if(k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, -1)] == 1 || k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, -1)] == -1) {
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 0), relative_pos(k_size[1], j, -1)), current_group);
+                                k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, -1)] = -1;                        
+                            }
                         }
-                        else if(is_last_row && (k_map[0][j] == 1 || k_map[0][j] == -1)) {
-                            add_back(cell, get_cell_exp(eq->var_count, 0, j), current_group);
-                            k_map[0][j] = -1;
-                        }
-                        // Right
-                        else if(!is_last_col && (k_map[i][j + 1] == 1 || k_map[i][j + 1] == -1)) {
-                            add_back(cell, get_cell_exp(eq->var_count, i, j + 1), current_group);
-                            k_map[i][j + 1] = -1;
-                        }
-                        else if(is_last_col && (k_map[i][k_size[1] + 1] == 1 || k_map[i][k_size[1] + 1] == -1)) {
-                            add_back(cell, get_cell_exp(eq->var_count, 0, j), current_group);
-                            k_map[0][j] = -1;
-                        }
-                        // Up
-                        else if(!is_first_row && (k_map[i - 1][j] == 1 || k_map[i - 1][j] == -1)) {
-                            add_back(cell, get_cell_exp(eq->var_count, i, k_size[1] + 1), current_group);
-                            k_map[i][k_size[1] + 1] = -1;
-                        }
-                        else if(is_first_row && (k_map[k_size[0] - 1][j] == 1 || k_map[k_size[0] - 1][j] == -1)) {
-                            add_back(cell, get_cell_exp(eq->var_count, k_size[0] - 1, j), current_group);
-                            k_map[k_size[0] - 1][j] = -1;
-                        }
-                        // Left
-                        else if(!is_first_col && (k_map[i][j - 1] == 1 || k_map[i][j - 1] == -1)) {
-                            add_back(cell, get_cell_exp(eq->var_count, i, j - 1), current_group);
-                            k_map[i][j - 1] = -1;
-                        }
-                        else if(is_first_col && (k_map[i][k_size[1] - 1] == 1 || k_map[i][k_size[1] - 1] == -1)) {
-                            add_back(cell, get_cell_exp(eq->var_count, i, k_size[1] - 1), current_group);
-                            k_map[i][k_size[1] - 1] = -1;
-                        }
-                    }
                     break;
 
-                    case 2:         // Potential square group
+                    case 2:                     // Potential square group
                     case 3:
                     case 4:
+                        count = 0;
+                        // Down | Right
+                        if(k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 1)] == 1 || k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 1)] == -1)
+                            count++;
+                        // Down | Left
+                        if(k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, -1)] == 1 || k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, -1)] == -1)
+                            count++;
+                        // Up | Left
+                        if(k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, -1)] == 1 || k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, -1)] == -1)
+                            count++;
+                        //  Up | Right
+                        if(k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 1)] == 1 || k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 1)] == -1)
+                            count++;
+//count = 0;
+                        switch (count++) {
+                        case 0:                 // Line group
+                            goto S;
 
-                    
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:                 
+                            add_back(cell, get_cell_exp(eq->var_count, i, j), current_group);
+                            k_map[i][j] = -1;
+                            // Down | Right
+                            if(k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 1)] == 1 || k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 1)] == -1) {
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 1), relative_pos(k_size[1], j, 0)), current_group);
+                                k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 0)] = -1;
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 0), relative_pos(k_size[1], j, 1)), current_group);
+                                k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, 1)] = -1;
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 1), relative_pos(k_size[1], j, 1)), current_group);
+                                k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 1)] = -1;
+                            }
+                            // Down | Left
+                            else if(k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, -1)] == 1 || k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, -1)] == -1) {
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 1), relative_pos(k_size[1], j, 0)), current_group);
+                                k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, 0)] = -1;
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 0), relative_pos(k_size[1], j, 1)), current_group);
+                                k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, -1)] = -1;
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 1), relative_pos(k_size[1], j, 1)), current_group);
+                                k_map[relative_pos(k_size[0], i, 1)][relative_pos(k_size[1], j, -1)] = -1;
+                            }
+                            // Up | Left
+                            else if(k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, -1)] == 1 || k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, -1)] == -1) {
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 1), relative_pos(k_size[1], j, 0)), current_group);
+                                k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 0)] = -1;
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 0), relative_pos(k_size[1], j, 1)), current_group);
+                                k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, -1)] = -1;
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 1), relative_pos(k_size[1], j, 1)), current_group);
+                                k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, -1)] = -1;
+                            }
+                            //  Up | Right
+                            else if(k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 1)] == 1 || k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 1)] == -1) {
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 1), relative_pos(k_size[1], j, 0)), current_group);
+                                k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 0)] = -1;
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 0), relative_pos(k_size[1], j, 1)), current_group);
+                                k_map[relative_pos(k_size[0], i, 0)][relative_pos(k_size[1], j, 1)] = -1;
+                                add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, 1), relative_pos(k_size[1], j, 1)), current_group);
+                                k_map[relative_pos(k_size[0], i, -1)][relative_pos(k_size[1], j, 1)] = -1;
+                            }
 
-                        if(1) {     // Group is a line
-                            count = 1;
-                            goto switch_count;
-                        }
+                        break;
                         
+                        default:
+                            exit_error("karnaugh_algorithm | karnaugh.c");
+                        };
                     break;
 
                     default:
@@ -139,7 +168,7 @@ char* karnaugh_algorithm(Equation* eq) {
                 };
 
                 // Reset variables
-                count = 0; is_first_row = 0; is_last_row = 0; is_first_col = 0; is_last_col = 0; full_line = 0;
+                count = 0; full_line = 0;
                 current_group++;
             }
     int group_count = current_group - 1;
@@ -149,6 +178,10 @@ char* karnaugh_algorithm(Equation* eq) {
 
     // Simplification
     simp_exp = simplify_list(cell, group_count, eq);
+
+
+print_list(cell);
+
 
     // Free linked list
     while(cell != NULL)
@@ -282,6 +315,16 @@ void get_fill_order(int order[], int var_count) {
             exit_error("get_fill_order (invalid size) | karnaugh.c");
     }
 }
+
+int relative_pos(int size, int current, int relative) {
+    int index = current + relative;
+    index = current + relative;
+    if(index < 0)
+        return size - 1;
+    if(index == size)
+        return 0;
+    return index;    
+}   
 
 char* get_cell_exp(int var_count, int row, int col) {
     switch(var_count) {
