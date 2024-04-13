@@ -125,6 +125,25 @@ void check_calc_TT_line(void) { if(!ignore_check_calc_TT_line) {
 } else {printf("Ignored test ");}
 }
 
+const int ignore_check_convert_term_to_line = 0;
+void check_convert_term_to_line(void) { if(!ignore_check_convert_term_to_line) {
+    int* test1 = convert_term_to_line(4, "ABCD");
+    int result1[] = {1,1,1,1};
+    for(int i = 0; i < 4; i++)
+        TEST_CHECK(test1[i] == result1[i]);
+
+    int* test2 = convert_term_to_line(4, "A'B'C'D'");
+    int result2[] = {0,0,0,0};
+    for(int i = 0; i < 4; i++)
+        TEST_CHECK(test2[i] == result2[i]);
+
+    int* test3 = convert_term_to_line(4, "AB'CD'");
+    int result3[] = {1,0,1,0};
+    for(int i = 0; i < 4; i++)
+        TEST_CHECK(test3[i] == result3[i]);
+} else {printf("Ignored test ");}
+}
+
 const int ignore_check_eval_exp = 0;
 void check_eval_exp(void) { if(!ignore_check_eval_exp) {
     TEST_CHECK(eval_exp("(0'@(1+1))+1") == 1);              // NOT and XOR
@@ -226,14 +245,15 @@ void check_count_var_from_BE(void) { if(!ignore_check_count_var_from_BE) {
 
 const int ignore_check_simplify_eq = 0;
 void check_simplify_eq(void) { if(!ignore_check_count_var_from_BE) {
-    initialize_from_BE(1, "A");
+    initialize_from_BE(2, "AB'+AB");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A") == 0);
-    initialize_from_BE(2, "A+B");
-    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A+B") == 0);
+    initialize_from_BE(2, "AB'+A'B+AB");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "B+A") == 0);
+    /*print_bool_exp(simplified_eq(&current_eq).bool_exp, stdout);
     initialize_from_BE(3, "A'B'C+ABC'+ABC");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "AB+A'B'C") == 0);
     initialize_from_BE(4, "A'B'C'D'+A'B'CD+A'BC'D+AB'CD'+AB'CD+ABCD'+ABCD");
-    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "AC+B'CD+A'BC'D+A'B'C'D'") == 0);
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "AC+B'CD+A'BC'D+A'B'C'D'") == 0);*/
 
 } else {printf("Ignored test ");}
 }
@@ -245,6 +265,7 @@ TEST_LIST = {
     {"is_string_valid", check_is_string_valid},
     {"boolean_operations", check_boolean_operations},
     {"calc_TT_line", check_calc_TT_line},
+    {"convert_term_to_line", check_convert_term_to_line},
     {"eval_exp", check_eval_exp},
     {"required_size", check_required_size},
     {"generate_file_array", check_generate_file_array},

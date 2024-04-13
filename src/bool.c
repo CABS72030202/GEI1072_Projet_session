@@ -182,6 +182,19 @@ int** convert_BE_to_TT(int var_count, char* bool_exp) {
     return truth_table;
 }
 
+int* convert_term_to_line(int var_count, char* term) {
+    int curr_var = 0;
+    int* TT_line = (int*)calloc(var_count, sizeof(int)); 
+    for(int i = 0; term[i] != '\0'; i++)
+        if(isalpha(term[i])) { 
+            if(i == strlen(term) - 1 ||             // Last character is a variable
+             term[i + 1] != '\'')                   // The next character is not '          
+                TT_line[curr_var] = 1; 
+            curr_var++;
+        }      
+    return TT_line;
+}
+
 int calc_TT_line(int var_count, int var_values[], char* bool_exp) {
     if (strlen(bool_exp) > 100)
         exit_error("Exceeded allocated memory | calc_TT_line | bool.c");

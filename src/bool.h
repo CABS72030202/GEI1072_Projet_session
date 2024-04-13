@@ -26,6 +26,7 @@ char* sum_of_products(int, int**);
 char* product_of_sums(int, int**);
 int required_size(int, int**, char*);           // Calculates the number of slots required in a char array for a boolean expression of form SOP or POS
 int** convert_BE_to_TT(int, char*);             // Define the truth table of an equation with the associated boolean expression
+int* convert_term_to_line(int, char*);          // Define the corresponding values of each variables of an equation for a specific term (SOP or POS)
 int calc_TT_line(int, int[], char*);            // Calculate the value of S from a specific boolean combination for a boolean expression
 void print_truth_table(int, int**, FILE*);      // Print a truth table with its header to a specific I/O stream
 void print_truth_line(int, int, int**, FILE*);  // Print a specific line of a truth table to a specific I/O stream

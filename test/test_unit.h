@@ -28,6 +28,9 @@ void check_required_size(void);
 extern const int ignore_check_calc_TT_line;
 void check_calc_TT_line(void);
 
+extern const int ignore_check_convert_term_to_line;
+void check_convert_term_to_line(void);
+
 extern const int ignore_check_count_var_from_BE;
 void check_count_var_from_BE(void);
 
