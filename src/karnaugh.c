@@ -5,6 +5,10 @@ Equation simplified_eq(Equation* eq) {
         return *eq;
     char* simp_exp = karnaugh_algorithm(eq);
     Equation simp_eq = {eq->var_count, eq->truth_table, simp_exp};
+    if(!compare_eq(&simp_eq, eq)) {
+        printf("\nErreur. Impossible de simplifier l'expression %s\n", eq->bool_exp);
+        return *eq;
+    }
     return simp_eq;
 }
 
@@ -246,20 +250,10 @@ char* karnaugh_algorithm(Equation* eq) {
     // Simplification
     simp_exp = simplify_list(cell, group_count, eq);
 
-
-print_list(cell);
-
-
     // Free linked list
     while(cell != NULL)
         pop_front(&cell);
     free(cell);
-
-
-
-print_bool_exp(simp_exp, stdout);
-
-
 
     if(simp_exp == NULL)
         return eq->bool_exp;

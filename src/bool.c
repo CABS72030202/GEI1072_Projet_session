@@ -234,3 +234,17 @@ void print_truth_header(int var_count, FILE *stdio) {
 void print_bool_exp(char *bool_exp, FILE *stdio) {
     fprintf(stdio, "\nS = %s\n", bool_exp);
 }
+
+int compare_eq(Equation* eq1, Equation* eq2) {
+    if(eq1->var_count != eq2->var_count)
+        return 0;
+    // Update truth tables
+    eq1->truth_table = convert_BE_to_TT(eq1->var_count, eq1->bool_exp);
+    eq2->truth_table = convert_BE_to_TT(eq2->var_count, eq2->bool_exp);
+    // Compare truth tables
+    for(int i = 0; i < pow(2, eq1->var_count); i++) 
+        for(int j = 0; j < eq1->var_count + 1; j++)
+            if(eq1->truth_table[i][j] != eq2->truth_table[i][j])
+                return 0;
+    return 1;
+}

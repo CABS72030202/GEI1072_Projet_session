@@ -36,8 +36,8 @@ void check_count_var_from_BE(void);
 
 
 #include "../src/karnaugh.h"
-extern const int ignore_check_simplify_eq;
-void check_simplify_eq(void);
+extern const int ignore_check_simplified_eq;
+void check_simplified_eq(void);
 
 
 #include "../src/calc.h"
