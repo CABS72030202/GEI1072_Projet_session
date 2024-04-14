@@ -1,2 +1,2 @@
 # GEI1072_Projet_session
-Collaborative project for GEI1072 - Engineering Problem Solving in C, Winter 2024. Develops a program to simplify logical expressions using truth tables or Boolean equations.
+Collaborative project for GEI1072 - Engineering Problem Solving in C, Winter 2024. A program enabling manipulation and simplification of Boolean equations up to 4 variables based on a truth table, a user-input Boolean expression, or one stored in a text file.
