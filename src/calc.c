@@ -1,5 +1,14 @@
 #include "../src/calc.h"
 
+const int MAX_STACK_SIZE = 100;
+
+/* 
+    Function: preprocess_exp
+    Description: Preprocesses the boolean expression to handle (A)(B) and A(B) forms.
+    Parameters:
+        - expr: String defining the boolean expression.
+    Returns: The preprocessed boolean expression.
+*/
 char* preprocess_exp(char* expr) {
     // Allocate memory for the processed expression
     char* processed = (char*)malloc(2 * strlen(expr) * sizeof(char));
@@ -7,7 +16,7 @@ char* preprocess_exp(char* expr) {
         exit_error("preprocess_exp | calc.c");
 
     int index = 0;  // Index to track the position in the processed expression
-    int pos = 1;    // Index to track the relative position when analysing further in the expression
+    int pos = 1;    // Index to track the relative position when analyzing further in the expression
 
     while (*expr) {
         // Copy current character to the processed expression
@@ -16,7 +25,6 @@ char* preprocess_exp(char* expr) {
         // If the current character is a digit (0 or 1) or a closing parenthesis
         if (isdigit(*expr) || *expr == ')') {
             // If the next character is a ', find the relative position of the next character or digit or opening parenthesis and copy all ' characters to the processed expression
-            
             while (*(expr + pos) == '\'') {
                 processed[index++] = '\'';
                 pos++;
@@ -28,7 +36,7 @@ char* preprocess_exp(char* expr) {
         // Move to the next character in the original expression
         expr += pos;
 
-        // Reset relative position
+        // Reset the relative position
         pos = 1;
     }
 
@@ -39,14 +47,21 @@ char* preprocess_exp(char* expr) {
     return processed;
 }
 
+/* 
+    Function: eval_exp
+    Description: Evaluates the boolean expression.
+    Parameters:
+        - expr: String defining the boolean expression.
+    Returns: The result of the evaluation (0 or 1).
+*/
 int eval_exp(char *expr) {
     expr = preprocess_exp(expr);
     // Stack to store operands (0 or 1)
-    int stack[100];
+    int stack[MAX_STACK_SIZE];
     int top = -1;
 
     // Stack to store operators
-    char opStack[100];
+    char opStack[MAX_STACK_SIZE];
     int opTop = -1;
 
     // Loop through the expression
@@ -94,6 +109,16 @@ int eval_exp(char *expr) {
     return stack[top];
 }
 
+/* 
+    Function: perform_op
+    Description: Performs an operation using operands and operators.
+    Parameters:
+        - stack: Array representing the operand stack.
+        - top: Pointer to the top of the operand stack.
+        - opStack: Array representing the operator stack.
+        - opTop: Pointer to the top of the operator stack.
+    Returns: The result of the operation.
+*/
 int perform_op(int stack[], int *top, char opStack[], int *opTop) {
     int result = 0;
     int b = stack[(*top)--];
@@ -123,6 +148,13 @@ int perform_op(int stack[], int *top, char opStack[], int *opTop) {
     return result;
 }
 
+/* 
+    Function: precedence
+    Description: Determines the precedence of an operator.
+    Parameters:
+        - op: Operator character.
+    Returns: The precedence value of the operator.
+*/
 int precedence(char op) {
     switch (op) {
         case '+':
@@ -139,10 +171,42 @@ int precedence(char op) {
 }
 
 // Boolean operations
+
+/* 
+    Function: or
+    Description: Performs the OR operation.
+    Parameters:
+        - a: First operand.
+        - b: Second operand.
+    Returns: The result of the OR operation.
+*/
 int or(int a, int b) { return a | b; }
 
+/* 
+    Function: and
+    Description: Performs the AND operation.
+    Parameters:
+        - a: First operand.
+        - b: Second operand.
+    Returns: The result of the AND operation.
+*/
 int and(int a, int b) { return a & b; }
 
+/* 
+    Function: xor
+    Description: Performs the XOR operation.
+    Parameters:
+        - a: First operand.
+        - b: Second operand.
+    Returns: The result of the XOR operation.
+*/
 int xor(int a, int b) { return a ^ b; }
 
+/* 
+    Function: not
+    Description: Performs the NOT operation.
+    Parameters:
+        - a: Operand.
+    Returns: The result of the NOT operation.
+*/
 int not(int a) { return abs(a - 1); }

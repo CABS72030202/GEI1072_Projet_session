@@ -7,6 +7,7 @@
 
 /* Functions used to interact with the user :
     - Print selection menus
+    - Menu selection by the user
     - Input validation
     - Boolean expression definition by the user
 */

@@ -4,7 +4,7 @@
 #include "../src/calc.h"
 
 /*  Functions used to define and manipulate
-     all forms of a boolean expression  
+    all forms of a boolean expression  
 */
 
 typedef struct {
@@ -22,8 +22,8 @@ void initialize_from_BE(int, char*);            // Initialize every attributes o
 char* format_BE(char*, char[]);                 // Formats the boolean expression by removing unecessary characters and adding required ones 
 int count_var_from_BE(char*);                   // Counts the number of variables corresponding from a boolean expression
 char* convert_TT_to_BE(int, int**);             // Define the boolean expression of an equation with the associated truth table
-char* sum_of_products(int, int**);
-char* product_of_sums(int, int**);
+char* sum_of_products(int, int**);              // Returns the sum of products of a truth table
+char* product_of_sums(int, int**);              // Returns the product of sums of a truth table
 int required_size(int, int**, char*);           // Calculates the number of slots required in a char array for a boolean expression of form SOP or POS
 int** convert_BE_to_TT(int, char*);             // Define the truth table of an equation with the associated boolean expression
 int* convert_term_to_line(int, char*);          // Define the corresponding values of each variables of an equation for a specific term (SOP or POS)
