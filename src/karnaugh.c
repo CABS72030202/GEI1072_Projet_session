@@ -9,7 +9,7 @@ Equation simplified_eq(Equation* eq) {
 }
 
 char* karnaugh_algorithm(Equation* eq) {
-    int k_size[2] = {0,0}, i = 0, j = 0, p = 0;
+    int k_size[2] = {0,0}, i = 0, j = 0, p = 0, q = 0;
     int count = 0, full_line = 0;
     int current_group = 1;
     calc_karnaugh_size(&k_size, eq->var_count);                                             // Rows = [0] | Columns = [1]
@@ -116,7 +116,64 @@ char* karnaugh_algorithm(Equation* eq) {
                         case 1:
                         case 2:
                         case 3:
-                        case 4:                 
+                        case 4:
+                            for(p = 0, full_line = 0; p < k_size[0]; p++) 
+                                for(q = 0; q < 2; q++) {
+                                if(k_map[p][relative_pos(k_size[1], j, q)] == 0)
+                                    break;
+                                full_line++;
+                                }
+                            if(full_line == k_size[0] * 2) {        // Right vertical rectangle
+                                for(p = 0; p < k_size[0]; p++) 
+                                    for(q = 0; q < 2; q++){
+                                        add_back(cell, get_cell_exp(eq->var_count, p, relative_pos(k_size[1], j, q)), current_group);
+                                        k_map[p][relative_pos(k_size[1], j, q)] = -1;
+                                    }
+                                break;
+                            }
+                            for(p = 0, full_line = 0; p < k_size[0]; p++) 
+                                for(q = -1; q < 1; q++) {
+                                if(k_map[p][relative_pos(k_size[1], j, q)] == 0)
+                                    break;
+                                full_line++;
+                                }
+                            if(full_line == k_size[0] * 2) {        // Left vertical rectangle
+                                for(p = 0; p < k_size[0]; p++)
+                                    for(q = -1; q < 1; q++) {
+                                        add_back(cell, get_cell_exp(eq->var_count, p, relative_pos(k_size[1], j, q)), current_group);
+                                        k_map[p][relative_pos(k_size[1], j, q)] = -1;
+                                    }
+                                break;
+                            }
+                            for(p = 0, full_line = 0; p < k_size[1]; p++) 
+                                for(q = 0; q < 2; q++) {
+                                if(k_map[relative_pos(k_size[0], i, q)][p] == 0)
+                                    break;
+                                full_line++;
+                                }
+                            if(full_line == k_size[1] * 2) {        // Down horizontal rectangle
+                                for(p = 0; p < k_size[0]; p++)
+                                    for(q = 0; q < 2; q++) {
+                                        add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, q), p), current_group);
+                                        k_map[relative_pos(k_size[0], i, q)][p] = -1;
+                                    }
+                                break;
+                            }
+                            for(p = 0, full_line = 0; p < k_size[1]; p++) 
+                                for(q = -1; q < 1; q++) {
+                                if(k_map[relative_pos(k_size[0], i, q)][p] == 0)
+                                    break;
+                                full_line++;
+                                }
+                            if(full_line == k_size[1] * 2) {        // Up horizontal rectangle
+                                for(p = 0; p < k_size[0]; p++)
+                                    for(q = -1; q < 1; q++) {
+                                        add_back(cell, get_cell_exp(eq->var_count, relative_pos(k_size[0], i, q), p), current_group);
+                                        k_map[relative_pos(k_size[0], i, q)][p] = -1;
+                                    }
+                                break;
+                            }
+                            else {                              // Group of 4                 
                             add_back(cell, get_cell_exp(eq->var_count, i, j), current_group);
                             k_map[i][j] = -1;
                             // Down | Right
@@ -165,6 +222,7 @@ char* karnaugh_algorithm(Equation* eq) {
                             }
                             else        // Line group
                                 goto L;
+                            }
                         break;
                         
                         default:
@@ -216,7 +274,7 @@ char* simplify_list(Cell* list, int group_count, Equation* eq) {
     Cell* current = list;
     int** group_TT = (int*)malloc(pow(2, eq->var_count) * sizeof(int*));
     char temp[3];
-    char* simp_exp = (char*)malloc(required_size(eq->var_count, eq->truth_table, "SOP") * sizeof(char));      // Max size is current string size
+    char* simp_exp = (char*)malloc(required_size(eq->var_count, eq->truth_table, "POS") * sizeof(char));      // Max size is current string size
     simp_exp[0] = '\0';
     while(current_group <= group_count) {
         // Build group truth table

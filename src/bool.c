@@ -196,9 +196,7 @@ int* convert_term_to_line(int var_count, char* term) {
 }
 
 int calc_TT_line(int var_count, int var_values[], char* bool_exp) {
-    if (strlen(bool_exp) > 100)
-        exit_error("Exceeded allocated memory | calc_TT_line | bool.c");
-    char temp[100];
+    char* temp = (char*)malloc((strlen(bool_exp) + 1) * sizeof(char));
     int index = 0;
     for (int i = 0; bool_exp[i] != '\0'; i++) 
         if (bool_exp[i] >= a_ascii && bool_exp[i] <= (a_ascii + var_count)) 

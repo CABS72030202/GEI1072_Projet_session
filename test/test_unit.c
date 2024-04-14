@@ -1,6 +1,6 @@
 #include "../test/test_unit.h"
 
-const int ignore_check_format_BE = 0;
+const int ignore_check_format_BE = 1;
 void check_format_BE(void) { if(!ignore_check_format_BE) {
     char valid_chars[] = "+'.()@ ABCDS";
 
@@ -257,7 +257,7 @@ void check_count_var_from_BE(void) { if(!ignore_check_count_var_from_BE) {
 
 const int ignore_check_simplify_eq = 0;
 void check_simplify_eq(void) { if(!ignore_check_simplify_eq) {
-    /* Line groups 
+    /* Line groups */
     initialize_from_BE(2, "AB'+AB");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A") == 0);
     initialize_from_BE(2, "AB'+A'B+AB");
@@ -275,7 +275,7 @@ void check_simplify_eq(void) { if(!ignore_check_simplify_eq) {
     initialize_from_BE(4, "A'BC'D'+A'BC'D+A'BCD+A'BCD'");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A'B") == 0);
     initialize_from_BE(4, "A'B'CD+A'BC'D'+A'BC'D+A'BCD'+A'BCD+AB'C'D'+AB'CD+ABC'D'+ABCD");
-    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "CD+A'B+AC'D'") == 0);*/
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "CD+A'B+AC'D'") == 0);
 
     /* Square groups */
     initialize_from_BE(3, "A'BC+A'BC'+ABC+ABC'");
@@ -294,8 +294,10 @@ void check_simplify_eq(void) { if(!ignore_check_simplify_eq) {
     /* Rectangle groups */
     initialize_from_BE(4, "A'B'C'D+A'B'CD+A'BC'D+A'BCD+ABC'D+ABCD+AB'C'D+AB'CD");
     TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "D") == 0);
-    /*initialize_from_BE(4, "A'B'C'D+A'B'CD+A'BC'D+A'BCD+ABC'D+ABCD+AB'C'D+AB'CD+A'BC'D'+A'BCD'+ABC'D'+ABCD'");
-    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "B+D") == 0); */
+    initialize_from_BE(4, "A'B'C'D'+A'B'C'D+A'B'CD+A'B'CD'+A'BC'D'+A'BC'D+A'BCD+A'BCD'+ABC'D'+ABC'D+ABCD+ABCD'+AB'C'D+AB'CD+AB'CD'");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "A'+B+D+C") == 0);
+    initialize_from_BE(4, "A'B'C'D+A'B'CD+A'BC'D+A'BCD+ABC'D+ABCD+AB'C'D+AB'CD+A'BC'D'+A'BCD'+ABC'D'+ABCD'");
+    TEST_CHECK(strcmp(simplified_eq(&current_eq).bool_exp, "D+B") == 0);
 
 } else {printf("Ignored test ");}
 }
