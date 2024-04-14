@@ -32,5 +32,6 @@ void print_truth_table(int, int**, FILE*);      // Print a truth table with its 
 void print_truth_line(int, int, int**, FILE*);  // Print a specific line of a truth table to a specific I/O stream
 void print_truth_header(int, FILE*);            // Print the header of a truth table to a specific I/O stream
 void print_bool_exp(char*, FILE*);              // Print a boolean expression to a specific I/O stream
+int compare_eq(Equation*, Equation*);           // Function that returns true if the two given equations are equivalent
 
 #endif

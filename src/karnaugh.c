@@ -3,6 +3,9 @@
 Equation simplified_eq(Equation* eq) {
     if(eq->var_count < 2)       // Equation is already simplified
         return *eq;
+    // Convert to SOP if POS by default
+    if(default_bool_exp_type == 2)
+        eq->bool_exp = sum_of_products(eq->var_count, eq->truth_table);
     char* simp_exp = karnaugh_algorithm(eq);
     Equation simp_eq = {eq->var_count, eq->truth_table, simp_exp};
     if(!compare_eq(&simp_eq, eq)) {

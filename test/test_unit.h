@@ -34,6 +34,8 @@ void check_convert_term_to_line(void);
 extern const int ignore_check_count_var_from_BE;
 void check_count_var_from_BE(void);
 
+extern const int ignore_check_compare_eq;
+void check_compare_eq(void);
 
 #include "../src/karnaugh.h"
 extern const int ignore_check_simplified_eq;
